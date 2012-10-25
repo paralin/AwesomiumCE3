@@ -9,7 +9,7 @@ namespace AwesomiumPlugin
 {
     CPluginAwesomium* gPlugin = NULL;
 
-    CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins(false), m_bVisible(false)
+    CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false ), m_bVisible( false )
     {
         gPlugin = this;
     }
@@ -73,7 +73,7 @@ namespace AwesomiumPlugin
 
         // Note: Autoregister Flownodes will be automatically registered
 
-		InitAwesomium();
+        InitAwesomium();
 
         return true;
     }
@@ -88,101 +88,110 @@ namespace AwesomiumPlugin
         return "OK";
     }
 
-	void MaterialCommand(IConsoleCmdArgs *pArgs)
-	{
-		auto entity = gEnv->pEntitySystem->FindEntityByName(pArgs->GetArg(1));
-		if(entity)
-		{
-			auto material = entity->GetMaterial();
+    void MaterialCommand( IConsoleCmdArgs* pArgs )
+    {
+        auto entity = gEnv->pEntitySystem->FindEntityByName( pArgs->GetArg( 1 ) );
 
-			if(material)
-				gEnv->pLog->LogAlways("Found material %s", material->GetName());
-		}
-	}
+        if ( entity )
+        {
+            auto material = entity->GetMaterial();
+
+            if ( material )
+            {
+                gEnv->pLog->LogAlways( "Found material %s", material->GetName() );
+            }
+        }
+    }
 
     bool CPluginAwesomium::InitAwesomium()
-	{
-		if(!gEnv || !gEnv->pGame->GetIGameFramework())
-		{
-			gEnv->pLog->LogError("Failed to initialize Awesomium, no gameframework found. This is probably caused by calling the Init method too soon");
-			return false;
-		}
+    {
+        if ( !gEnv || !gEnv->pGame->GetIGameFramework() )
+        {
+            gEnv->pLog->LogError( "Failed to initialize Awesomium, no gameframework found. This is probably caused by calling the Init method too soon" );
+            return false;
+        }
 
-		IGameFramework *pGameFramework = gEnv->pGame->GetIGameFramework();
-		pGameFramework->RegisterListener(this, "AwesomiumCE3", eFLPriority_HUD);
+        IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
+        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_HUD );
 
-		m_pWebCore = WebCore::Initialize( WebConfig() );
+        m_pWebCore = WebCore::Initialize( WebConfig() );
 
-		// Initialize DataPakSource
-		
-		m_DataSource = new DataPakSource(WSLit("..\\..\\..\\Game\\UIFiles.pak"));
-		LoadElement("UI/lowerleft.htm");
-		SetVisible(true);
+        // Initialize DataPakSource
+        m_DataSource = NULL;
 
-		gEnv->pConsole->RegisterInt("aw_t0", 1, 0);
-		gEnv->pConsole->RegisterInt("aw_t1", 0, 0);
-		gEnv->pConsole->RegisterInt("aw_s0", 0, 0);
-		gEnv->pConsole->RegisterInt("aw_s1", 1, 0);
-		gEnv->pConsole->AddCommand("aw_material", MaterialCommand);
+        string sUIpak = gPluginManager->GetDirectoryGame();
+        sUIpak += "\\UIFiles.pak";
 
-		return true;
+        m_DataSource = new DataPakSource( WSLit( sUIpak ) );
+        LoadElement( "UI/lowerleft.htm" );
+        SetVisible( true );
 
-	}
+        gEnv->pConsole->RegisterInt( "aw_t0", 1, 0 );
+        gEnv->pConsole->RegisterInt( "aw_t1", 0, 0 );
+        gEnv->pConsole->RegisterInt( "aw_s0", 0, 0 );
+        gEnv->pConsole->RegisterInt( "aw_s1", 1, 0 );
+        gEnv->pConsole->AddCommand( "aw_material", MaterialCommand );
 
-	void CPluginAwesomium::Shutdown()
-	{
-	}
+        return true;
 
-	void CPluginAwesomium::OnPostUpdate(float fDeltaTime)
-	{
-		if(m_bVisible)
-		{
-			WebCore::instance()->Update();
-			std::for_each(std::begin(m_uiElements), std::end(m_uiElements), [&](std::shared_ptr<CUIElement>& e)
-			{
-				if(e->IsVisible())
-					e->OnUpdate();
-			});
-		}
-	}
+    }
 
-	void CPluginAwesomium::OnSaveGame(ISaveGame* pSaveGame)
-	{
+    void CPluginAwesomium::Shutdown()
+    {
+    }
 
-	}
+    void CPluginAwesomium::OnPostUpdate( float fDeltaTime )
+    {
+        if ( m_bVisible )
+        {
+            WebCore::instance()->Update();
+            std::for_each( std::begin( m_uiElements ), std::end( m_uiElements ), [&]( std::shared_ptr<CUIElement>& e )
+            {
+                if ( e->IsVisible() )
+                {
+                    e->OnUpdate();
+                }
+            } );
+        }
+    }
 
-	void CPluginAwesomium::OnLoadGame(ILoadGame* pLoadGame)
-	{
-	}
+    void CPluginAwesomium::OnSaveGame( ISaveGame* pSaveGame )
+    {
 
-	void CPluginAwesomium::OnLevelEnd(const char* nextLevel)
-	{
-	}
+    }
 
-	void CPluginAwesomium::OnActionEvent(const SActionEvent& event)
-	{
-	}
+    void CPluginAwesomium::OnLoadGame( ILoadGame* pLoadGame )
+    {
+    }
 
-	void CPluginAwesomium::OnPreRender()
-	{
-	}
+    void CPluginAwesomium::OnLevelEnd( const char* nextLevel )
+    {
+    }
 
-	void CPluginAwesomium::SetVisible(bool visible)
-	{
-		m_bVisible = visible;
-	}
+    void CPluginAwesomium::OnActionEvent( const SActionEvent& event )
+    {
+    }
 
-	bool CPluginAwesomium::IsVisible() const
-	{
-		return m_bVisible;
-	}
+    void CPluginAwesomium::OnPreRender()
+    {
+    }
 
-	int CPluginAwesomium::LoadElement(const char* pathToHtml)
-	{
-		auto element = std::make_shared<CUIElement>(pathToHtml);
+    void CPluginAwesomium::SetVisible( bool visible )
+    {
+        m_bVisible = visible;
+    }
 
-		m_uiElements.push_back(element);
+    bool CPluginAwesomium::IsVisible() const
+    {
+        return m_bVisible;
+    }
 
-		return 0;
-	}
+    int CPluginAwesomium::LoadElement( const char* pathToHtml )
+    {
+        auto element = std::make_shared<CUIElement>( pathToHtml );
+
+        m_uiElements.push_back( element );
+
+        return 0;
+    }
 }

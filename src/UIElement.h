@@ -5,32 +5,36 @@
 #include <Awesomium\BitmapSurface.h>
 #include <Awesomium\STLHelpers.h>
 
-class CUIElement
+namespace AwesomiumPlugin
 {
-public:
-	CUIElement(const char* pathToHtml);
-	virtual ~CUIElement();
 
-	virtual void OnUpdate();
-	virtual void SetVisible(bool visible);
-	virtual bool IsVisible() const;
-	virtual void SetObjectProperty(const char* propertyName, const char* propertyValue);
-	virtual int GetTextureId() const;
+    class CUIElement
+    {
+        public:
+            CUIElement( const char* pathToHtml );
+            virtual ~CUIElement();
 
-protected:
-	virtual int CreateTexture();
-	virtual void UpdateTexture();
+            virtual void OnUpdate();
+            virtual void SetVisible( bool visible );
+            virtual bool IsVisible() const;
+            virtual void SetObjectProperty( const char* propertyName, const char* propertyValue );
+            virtual int GetTextureId() const;
 
-	static const int InvalidTexture = -1;
-	const char* m_pathToHtml;
-	bool m_bVisible;
-	int m_textureId;
-	int m_width;
-	int m_height;
-	Awesomium::WebView* m_pWebView;
-	const unsigned char* m_pRenderBuffer;
+        protected:
+            virtual int CreateTexture();
+            virtual void UpdateTexture();
 
-	static Awesomium::JSObject s_javascriptObject;
+            static const int InvalidTexture = -1;
+            const char* m_pathToHtml;
+            bool m_bVisible;
+            int m_textureId;
+            int m_width;
+            int m_height;
+            Awesomium::WebView* m_pWebView;
+            const unsigned char* m_pRenderBuffer;
 
-};
+            static Awesomium::JSObject s_javascriptObject;
 
+    };
+
+}

@@ -29,7 +29,7 @@ namespace AwesomiumPlugin
     class CPluginAwesomium :
         public PluginManager::CPluginBase,
         public IPluginAwesomium,
-		public IGameFrameworkListener
+        public IGameFrameworkListener
     {
         public:
             CPluginAwesomium();
@@ -86,26 +86,25 @@ namespace AwesomiumPlugin
             };
 
             virtual bool InitAwesomium() override;
-			virtual void Shutdown() override;
-			virtual void SetVisible(bool visible) override;
-			virtual bool IsVisible() const override;
+            virtual void Shutdown() override;
+            virtual void SetVisible( bool visible ) override;
+            virtual bool IsVisible() const override;
 
-			// IGameFramework
-			virtual void OnPostUpdate(float fDeltaTime) override;
-			virtual void OnSaveGame(ISaveGame* pSaveGame) override;
-			virtual void OnLoadGame(ILoadGame* pLoadGame) override;
-			virtual void OnLevelEnd(const char* nextLevel) override;
-			virtual void OnActionEvent(const SActionEvent& event) override;
-			virtual void OnPreRender() override;
+            // IGameFramework
+            virtual void OnPostUpdate( float fDeltaTime ) override;
+            virtual void OnSaveGame( ISaveGame* pSaveGame ) override;
+            virtual void OnLoadGame( ILoadGame* pLoadGame ) override;
+            virtual void OnLevelEnd( const char* nextLevel ) override;
+            virtual void OnActionEvent( const SActionEvent& event ) override;
+            virtual void OnPreRender() override;
 
-	protected:
-		bool m_bEnablePlugins;
-		bool m_bVisible;
-		std::vector<std::shared_ptr<CUIElement>> m_uiElements;
-		WebCore* m_pWebCore;
-		DataSource* m_DataSource;
+            bool m_bEnablePlugins;
+            bool m_bVisible;
+            std::vector<std::shared_ptr<CUIElement>> m_uiElements;
+            WebCore* m_pWebCore;
+            DataSource* m_DataSource;
 
-		virtual int LoadElement(const char* pathToHtml);
+            virtual int LoadElement( const char* pathToHtml );
 
     };
 
