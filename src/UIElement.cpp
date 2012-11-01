@@ -39,7 +39,8 @@ namespace AwesomiumPlugin
         SetObjectProperty( "version", gPlugin->GetVersion() );
         SetObjectProperty( "author", gPlugin->ListAuthors() );
 
-        m_pWebView->LoadURL( WebURL( WSLit( "http://www.google.de" ) ) );
+        m_pWebView->LoadURL( WebURL( WSLit( "http://www.youtube.com/watch?v=tjLSCVm3CEY" ) ) );
+        //m_pWebView->LoadURL( WebURL( WSLit( "http://www.google.de" ) ) );
         //m_pWebView->LoadURL( WebURL( WSLit( path ) ) );
         Error teste = m_pWebView->last_error();
         m_pWebView->SetTransparent( false );
@@ -81,7 +82,7 @@ namespace AwesomiumPlugin
     void CUIElement::UpdateTexture()
     {
         gEnv->pRenderer->UpdateTextureInVideoMemory( m_textureId, const_cast<unsigned char*>( m_pRenderBuffer ), 0, 0, m_width, m_height, eTF_A8R8G8B8 );
-        gEnv->pRenderer->Push2dImage( 0, 0, 500, 500, m_textureId );
+        gEnv->pRenderer->Push2dImage( 20, 20, 500, 500, m_textureId, 0, 1, 1, 0 );
     }
 
     int CUIElement::CreateTexture()
