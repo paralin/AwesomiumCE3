@@ -1,6 +1,6 @@
 Awesomium Plugin for CryEngine SDK
 =====================================
-TODO: Describe where you tested it.
+CryEngine 3.4.0 DX9 working.
 
 TODO: Describe the purpose of your plugin
 
