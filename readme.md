@@ -1,12 +1,9 @@
 Awesomium Plugin for CryEngine SDK
 =====================================
-CryEngine 3.4.0 DX9 working.
+This was originally a plugin with a ton of spaghetti code to try and get Awesomium working in CE3.
 
-TODO: Describe the purpose of your plugin
+I (kidovate) have forked the repository to clean up the code and try to get it to a more finished form.
 
-For redistribution please see license.txt.
-
-TODO: Describe where the latest version of your plugin can be found.
 
 Installation / Integration
 ==========================
@@ -16,15 +13,14 @@ The plugin manager will automatically load up the plugin when the game/editor is
 
 CVars
 =====
-* ```prefix_samplecvar```
-  TODO: Describe the cvar
+None at the moment.
 
 Flownodes
 =========
-TODO: Describe the flownodes inside your plugin
+Documentation not done yet.
 
 Objects
 =======
-TODO: Describe custom object classes inside your plugin
+Documentation not done yet.
 
 ...
