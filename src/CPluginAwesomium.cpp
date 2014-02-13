@@ -26,22 +26,6 @@ namespace AwesomiumPlugin
 
         if ( bRet )
         {
-            // Depending on your plugin you might not want to unregister anything
-            // if the System is quitting.
-            // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
-
-            // Unregister CVars
-            if ( gEnv && gEnv->pConsole )
-            {
-                // ...
-            }
-
-            // Unregister game objects
-            if ( gEnv && gEnv->pGameFramework )
-            {
-                // ...
-            }
-
             // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
             gPluginManager->UnloadPlugin( GetName() );
 
@@ -56,20 +40,6 @@ namespace AwesomiumPlugin
     {
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
-
-        // Register CVars/Commands
-        if ( gEnv && gEnv->pConsole )
-        {
-            // TODO: Register CVARs/Commands here if you have some
-            // ...
-        }
-
-        // Register Game Objects
-        if ( gEnv && gEnv->pGameFramework )
-        {
-            // TODO: Register Game Objects here if you have some
-            // ...
-        }
 
         // Note: Autoregister Flownodes will be automatically registered
 
@@ -112,7 +82,7 @@ namespace AwesomiumPlugin
         }
 
         IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
-        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_HUD );
+        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_Menu );
 
         m_pWebCore = WebCore::Initialize( WebConfig() );
 
