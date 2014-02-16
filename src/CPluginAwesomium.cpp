@@ -82,9 +82,11 @@ namespace AwesomiumPlugin
         }
 
         IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
-        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_Menu );
+        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_Default );
 
-        m_pWebCore = WebCore::Initialize( WebConfig() );
+        WebConfig config;
+        config.remote_debugging_port = 3000;
+        m_pWebCore = WebCore::Initialize( config );
 
         // Initialize DataPakSource
         m_DataSource = NULL;

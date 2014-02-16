@@ -40,7 +40,7 @@ namespace AwesomiumPlugin
         SetObjectProperty( "author", gPlugin->ListAuthors() );
 
         m_pWebView->LoadURL( WebURL( WSLit( "http://www.youtube.com/watch?v=tjLSCVm3CEY" ) ) );
-        //m_pWebView->LoadURL( WebURL( WSLit( "http://www.google.de" ) ) );
+        //m_pWebView->LoadURL( WebURL( WSLit( "http://www.google.com" ) ) );
         //m_pWebView->LoadURL( WebURL( WSLit( path ) ) );
         Error teste = m_pWebView->last_error();
         m_pWebView->SetTransparent( false );
@@ -56,15 +56,13 @@ namespace AwesomiumPlugin
     {
         BitmapSurface* surface = static_cast<BitmapSurface*>( m_pWebView->surface() );
 
-        if ( surface && surface->is_dirty() )
+        if ( surface )//&& surface->is_dirty() )
         {
             m_pRenderBuffer = surface->buffer();
 
             if ( m_textureId == InvalidTexture )
             {
                 m_textureId = CreateTexture();
-                //auto entity = gEnv->pEntitySystem->FindEntityByName("cabin_table1");
-                //auto material = entity->GetMaterial();
             }
 
             else
@@ -87,16 +85,7 @@ namespace AwesomiumPlugin
 
     int CUIElement::CreateTexture()
     {
-        return gEnv->pRenderer->SF_CreateTexture( m_width, m_height, 1, NULL, eTF_X8R8G8B8, FT_USAGE_DYNAMIC );
-        /*
-        auto material = gEnv->p3DEngine->GetMaterialManager()->FindMaterial("cemono/Game/Levels/Forest/TestMaterial");
-        if(material)
-        {
-            gEnv->pEntitySystem->FindEntityByName("screen1")->SetMaterial(material);
-            return material->GetShaderItem().m_pShaderResources->GetTexture(EFTT_DIFFUSE)->m_Sampler.m_pITex->GetTextureID();
-        }
-        */
-        return -1;
+        return gEnv->pRenderer->SF_CreateTexture( m_width, m_height, 1, NULL, eTF_A8R8G8B8, FT_USAGE_DYNAMIC | FT_ALPHA );
     }
 
     void CUIElement::SetVisible( bool visible )

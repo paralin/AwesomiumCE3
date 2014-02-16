@@ -62,7 +62,7 @@ namespace AwesomiumPlugin
 
             const char* ListAuthors() const
             {
-                return "Erik Simon";
+                return "Christian Stewart";
             };
 
             const char* ListCVars() const;
