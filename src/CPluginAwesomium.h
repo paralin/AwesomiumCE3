@@ -9,12 +9,13 @@
 #include <CPluginBase.hpp>
 
 #include <IPluginAwesomium.h>
-#include <UIElement.h>
+#include <HTMLElement.h>
 
 #include <IGameFramework.h>
 #include <Awesomium\WebCore.h>
 #include <Awesomium\DataPak.h>
 #include <Awesomium\STLHelpers.h>
+#include <IPluginD3D.h>
 
 #define PLUGIN_NAME "Awesomium"
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
@@ -35,8 +36,6 @@ namespace AwesomiumPlugin
             CPluginAwesomium();
             ~CPluginAwesomium();
 
-            // IPluginBase
-            bool Release( bool bForce = false );
 
             int GetInitializationMode() const
             {
@@ -98,11 +97,17 @@ namespace AwesomiumPlugin
             virtual void OnActionEvent( const SActionEvent& event ) override;
             virtual void OnPreRender() override;
 
+            bool CPluginAwesomium::InitDependencies();
+            bool CPluginAwesomium::Release( bool bForce );
+            bool CPluginAwesomium::CheckDependencies() const;
+
             bool m_bEnablePlugins;
             bool m_bVisible;
-            std::vector<std::shared_ptr<CUIElement>> m_uiElements;
+            std::vector<std::shared_ptr<HTMLElement>> m_uiElements;
             WebCore* m_pWebCore;
             DataSource* m_DataSource;
+
+            D3DPlugin::IPluginD3D* gD3DSystem;
 
             virtual int LoadElement( const char* pathToHtml );
 

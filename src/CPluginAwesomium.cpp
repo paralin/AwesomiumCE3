@@ -12,6 +12,7 @@ namespace AwesomiumPlugin
     CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false ), m_bVisible( false )
     {
         gPlugin = this;
+        gD3DSystem = NULL;
     }
 
     CPluginAwesomium::~CPluginAwesomium()
@@ -19,22 +20,6 @@ namespace AwesomiumPlugin
         gPlugin = NULL;
     }
 
-    bool CPluginAwesomium::Release( bool bForce )
-    {
-        // Should be called while Game is still active otherwise there might be leaks/problems
-        bool bRet = CPluginBase::Release( bForce );
-
-        if ( bRet )
-        {
-            // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
-            gPluginManager->UnloadPlugin( GetName() );
-
-            // Allow Plugin Manager garbage collector to unload this plugin
-            AllowDllUnload();
-        }
-
-        return bRet;
-    };
 
     bool CPluginAwesomium::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )
     {
@@ -117,7 +102,7 @@ namespace AwesomiumPlugin
         if ( m_bVisible )
         {
             WebCore::instance()->Update();
-            std::for_each( std::begin( m_uiElements ), std::end( m_uiElements ), [&]( std::shared_ptr<CUIElement>& e )
+            std::for_each( std::begin( m_uiElements ), std::end( m_uiElements ), [&]( std::shared_ptr<HTMLElement>& e )
             {
                 if ( e->IsVisible() )
                 {
@@ -160,10 +145,61 @@ namespace AwesomiumPlugin
 
     int CPluginAwesomium::LoadElement( const char* pathToHtml )
     {
-        auto element = std::make_shared<CUIElement>( pathToHtml );
+        auto element = std::make_shared<HTMLElement>( pathToHtml, gD3DSystem );
 
         m_uiElements.push_back( element );
 
         return 0;
+    }
+
+    bool CPluginAwesomium::CheckDependencies() const
+    {
+        bool bRet = CPluginBase::CheckDependencies();
+
+        if ( bRet )
+        {
+            bRet = PluginManager::safeGetPluginConcreteInterface<D3DPlugin::IPluginD3D*>( "D3D" );
+        }
+
+        return bRet;
+    }
+
+    bool CPluginAwesomium::Release( bool bForce )
+    {
+        bool bRet = true;
+
+        if ( !m_bCanUnload )
+        {
+            // Should be called while Game is still active otherwise there might be leaks/problems
+            bRet = CPluginBase::Release( bForce );
+
+            if ( bRet )
+            {
+                // TODO: Do your own cleanups here
+
+                if ( gD3DSystem )
+                {
+                    PluginManager::safeReleasePlugin( "D3D", gD3DSystem );
+                }
+
+                // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
+                gPluginManager->UnloadPlugin( GetName() );
+
+                // Allow Plugin Manager garbage collector to unload this plugin
+                AllowDllUnload();
+            }
+        }
+
+        return bRet;
+    };
+
+    bool CPluginAwesomium::InitDependencies()
+    {
+        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+        {
+            gD3DSystem = PluginManager::safeUsePluginConcreteInterface<D3DPlugin::IPluginD3D*>( "D3D" );
+        }
+
+        return CPluginBase::InitDependencies();
     }
 }

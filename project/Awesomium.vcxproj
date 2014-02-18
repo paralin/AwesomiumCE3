@@ -30,13 +30,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\UIElement.cpp" />
+    <ClCompile Include="..\src\HTMLElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\IPluginAwesomium.h" />
     <ClInclude Include="..\src\CPluginAwesomium.h" />
     <ClInclude Include="..\src\StdAfx.h" />
-    <ClInclude Include="..\src\UIElement.h" />
+    <ClInclude Include="..\src\HTMLElement.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -165,7 +165,7 @@ stylecode.bat</Command>
     <ClCompile>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\awesomium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\awesomium\include;%(AdditionalIncludeDirectories);$(SolutionDir)..\Plugin_D3D\inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_FORCEDLL;PURE_CLIENT;AWESOMIUMPLUGIN_EXPORTS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <FloatingPointModel>Precise</FloatingPointModel>

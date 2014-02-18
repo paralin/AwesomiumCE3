@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "UIElement.h"
+#include "HTMLElement.h"
 
 #include <IGame.h>
 #include <IGameFramework.h>
@@ -7,20 +7,23 @@
 
 #include <IPluginManager.h>
 #include <CPluginAwesomium.h>
+#include "ComPtr.h"
 
 using namespace Awesomium;
 
 namespace AwesomiumPlugin
 {
 
-    JSObject CUIElement::s_javascriptObject = JSObject();
+    JSObject HTMLElement::s_javascriptObject = JSObject();
     int __count = 0;
 
-    CUIElement::CUIElement( const char* pathToHtml )
+    HTMLElement::HTMLElement( const char* pathToHtml, D3DPlugin::IPluginD3D* d3dPlugin )
     {
+        d3d = d3dPlugin;
+        pDevice = ( ID3D11Device* )d3d->GetDevice();
+
         m_width = 1024;
         m_height = 1024;
-        m_textureId = InvalidTexture;
 
         string path = "asset://";
         path += pathToHtml;
@@ -48,59 +51,44 @@ namespace AwesomiumPlugin
         __count++;
     }
 
-    CUIElement::~CUIElement()
+    HTMLElement::~HTMLElement()
     {
     }
 
-    void CUIElement::OnUpdate()
+    struct VERTEX
     {
-        BitmapSurface* surface = static_cast<BitmapSurface*>( m_pWebView->surface() );
+        float X, Y, Z;    // vertex position
+    };
 
+    void HTMLElement::OnUpdate()
+    {
+        /*
+        BitmapSurface* surface = static_cast<BitmapSurface*>( m_pWebView->surface() );
         if ( surface )//&& surface->is_dirty() )
         {
             m_pRenderBuffer = surface->buffer();
+        }*/
 
-            if ( m_textureId == InvalidTexture )
-            {
-                m_textureId = CreateTexture();
-            }
 
-            else
-            {
-                UpdateTexture();
-            }
-        }
+        ID3D11DeviceContext* ctx = ( ID3D11DeviceContext* )d3d->GetDeviceContext();
+
+
     }
 
-    void CUIElement::SetObjectProperty( const char* propertyName, const char* propertyValue )
+    void HTMLElement::SetObjectProperty( const char* propertyName, const char* propertyValue )
     {
         s_javascriptObject.SetProperty( WSLit( propertyName ), JSValue( WSLit( propertyValue ) ) );
     }
 
-    void CUIElement::UpdateTexture()
-    {
-        gEnv->pRenderer->UpdateTextureInVideoMemory( m_textureId, const_cast<unsigned char*>( m_pRenderBuffer ), 0, 0, m_width, m_height, eTF_A8R8G8B8 );
-        gEnv->pRenderer->Push2dImage( 20, 20, 500, 500, m_textureId, 0, 1, 1, 0 );
-    }
 
-    int CUIElement::CreateTexture()
-    {
-        return gEnv->pRenderer->SF_CreateTexture( m_width, m_height, 1, NULL, eTF_A8R8G8B8, FT_USAGE_DYNAMIC | FT_ALPHA );
-    }
-
-    void CUIElement::SetVisible( bool visible )
+    void HTMLElement::SetVisible( bool visible )
     {
         m_bVisible = visible;
     }
 
-    bool CUIElement::IsVisible() const
+    bool HTMLElement::IsVisible() const
     {
         return m_bVisible;
-    }
-
-    int CUIElement::GetTextureId() const
-    {
-        return m_textureId;
     }
 
 }
