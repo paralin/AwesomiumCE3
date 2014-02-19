@@ -5,9 +5,6 @@
 #include <Awesomium\BitmapSurface.h>
 #include <Awesomium\STLHelpers.h>
 #include <IPluginManager.h>
-#include <IPluginD3D.h>
-
-#include <d3d11.h>
 
 namespace AwesomiumPlugin
 {
@@ -16,7 +13,7 @@ namespace AwesomiumPlugin
         //: private D3DPlugin::ID3DEventListener
     {
         public:
-            HTMLElement::HTMLElement( const char* pathToHtml, D3DPlugin::IPluginD3D* d3dPlugin );
+            HTMLElement::HTMLElement( const char* pathToHtml );
             ~HTMLElement();
 
             void OnUpdate();
@@ -33,13 +30,6 @@ namespace AwesomiumPlugin
             int m_height;
 
             Awesomium::WebView* m_pWebView;
-
-            ID3D11Device* pDevice;
-            D3DPlugin::IPluginD3D* d3d;
-
-            ID3D11Texture2D* renderTargetTextureMap;
-            ID3D11RenderTargetView* renderTargetViewMap;
-            ID3D11ShaderResourceView* shaderResourceViewMap;
 
             static Awesomium::JSObject s_javascriptObject;
 

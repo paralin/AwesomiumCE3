@@ -12,7 +12,6 @@ namespace AwesomiumPlugin
     CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false ), m_bVisible( false )
     {
         gPlugin = this;
-        gD3DSystem = NULL;
     }
 
     CPluginAwesomium::~CPluginAwesomium()
@@ -145,7 +144,7 @@ namespace AwesomiumPlugin
 
     int CPluginAwesomium::LoadElement( const char* pathToHtml )
     {
-        auto element = std::make_shared<HTMLElement>( pathToHtml, gD3DSystem );
+        auto element = std::make_shared<HTMLElement>( pathToHtml );
 
         m_uiElements.push_back( element );
 
@@ -155,11 +154,6 @@ namespace AwesomiumPlugin
     bool CPluginAwesomium::CheckDependencies() const
     {
         bool bRet = CPluginBase::CheckDependencies();
-
-        if ( bRet )
-        {
-            bRet = PluginManager::safeGetPluginConcreteInterface<D3DPlugin::IPluginD3D*>( "D3D" );
-        }
 
         return bRet;
     }
@@ -176,12 +170,6 @@ namespace AwesomiumPlugin
             if ( bRet )
             {
                 // TODO: Do your own cleanups here
-
-                if ( gD3DSystem )
-                {
-                    PluginManager::safeReleasePlugin( "D3D", gD3DSystem );
-                }
-
                 // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
                 gPluginManager->UnloadPlugin( GetName() );
 
@@ -195,11 +183,6 @@ namespace AwesomiumPlugin
 
     bool CPluginAwesomium::InitDependencies()
     {
-        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
-        {
-            gD3DSystem = PluginManager::safeUsePluginConcreteInterface<D3DPlugin::IPluginD3D*>( "D3D" );
-        }
-
         return CPluginBase::InitDependencies();
     }
 }

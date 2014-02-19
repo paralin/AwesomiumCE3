@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\authors.txt" />
-    <None Include="..\license.txt" />
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
@@ -165,7 +164,7 @@ stylecode.bat</Command>
     <ClCompile>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\awesomium\include;%(AdditionalIncludeDirectories);$(SolutionDir)..\Plugin_D3D\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\awesomium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_FORCEDLL;PURE_CLIENT;AWESOMIUMPLUGIN_EXPORTS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <FloatingPointModel>Precise</FloatingPointModel>

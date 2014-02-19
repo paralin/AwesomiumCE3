@@ -15,7 +15,6 @@
 #include <Awesomium\WebCore.h>
 #include <Awesomium\DataPak.h>
 #include <Awesomium\STLHelpers.h>
-#include <IPluginD3D.h>
 
 #define PLUGIN_NAME "Awesomium"
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
@@ -106,8 +105,6 @@ namespace AwesomiumPlugin
             std::vector<std::shared_ptr<HTMLElement>> m_uiElements;
             WebCore* m_pWebCore;
             DataSource* m_DataSource;
-
-            D3DPlugin::IPluginD3D* gD3DSystem;
 
             virtual int LoadElement( const char* pathToHtml );
 

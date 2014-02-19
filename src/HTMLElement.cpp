@@ -17,11 +17,8 @@ namespace AwesomiumPlugin
     JSObject HTMLElement::s_javascriptObject = JSObject();
     int __count = 0;
 
-    HTMLElement::HTMLElement( const char* pathToHtml, D3DPlugin::IPluginD3D* d3dPlugin )
+    HTMLElement::HTMLElement( const char* pathToHtml )
     {
-        d3d = d3dPlugin;
-        pDevice = ( ID3D11Device* )d3d->GetDevice();
-
         m_width = 1024;
         m_height = 1024;
 
@@ -62,17 +59,6 @@ namespace AwesomiumPlugin
 
     void HTMLElement::OnUpdate()
     {
-        /*
-        BitmapSurface* surface = static_cast<BitmapSurface*>( m_pWebView->surface() );
-        if ( surface )//&& surface->is_dirty() )
-        {
-            m_pRenderBuffer = surface->buffer();
-        }*/
-
-
-        ID3D11DeviceContext* ctx = ( ID3D11DeviceContext* )d3d->GetDeviceContext();
-
-
     }
 
     void HTMLElement::SetObjectProperty( const char* propertyName, const char* propertyValue )
