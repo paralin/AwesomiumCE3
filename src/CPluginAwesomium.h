@@ -9,7 +9,6 @@
 #include <CPluginBase.hpp>
 
 #include <IPluginAwesomium.h>
-#include <HTMLElement.h>
 
 #include <IGameFramework.h>
 #include <Awesomium\WebCore.h>
@@ -85,8 +84,6 @@ namespace AwesomiumPlugin
 
             virtual bool InitAwesomium() override;
             virtual void Shutdown() override;
-            virtual void SetVisible( bool visible ) override;
-            virtual bool IsVisible() const override;
 
             // IGameFramework
             virtual void OnPostUpdate( float fDeltaTime ) override;
@@ -101,13 +98,7 @@ namespace AwesomiumPlugin
             bool CPluginAwesomium::CheckDependencies() const;
 
             bool m_bEnablePlugins;
-            bool m_bVisible;
-            std::vector<std::shared_ptr<HTMLElement>> m_uiElements;
             WebCore* m_pWebCore;
-            DataSource* m_DataSource;
-
-            virtual int LoadElement( const char* pathToHtml );
-
     };
 
     extern CPluginAwesomium* gPlugin;

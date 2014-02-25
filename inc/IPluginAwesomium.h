@@ -21,7 +21,5 @@ namespace AwesomiumPlugin
 
         virtual bool InitAwesomium() = 0;
         virtual void Shutdown() = 0;
-        virtual void SetVisible( bool visible ) = 0;
-        virtual bool IsVisible() const = 0;
     };
 };

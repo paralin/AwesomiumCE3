@@ -9,7 +9,7 @@ namespace AwesomiumPlugin
 {
     CPluginAwesomium* gPlugin = NULL;
 
-    CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false ), m_bVisible( false )
+    CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false )
     {
         gPlugin = this;
     }
@@ -25,8 +25,6 @@ namespace AwesomiumPlugin
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
 
-        // Note: Autoregister Flownodes will be automatically registered
-
         InitAwesomium();
 
         return true;
@@ -34,27 +32,12 @@ namespace AwesomiumPlugin
 
     const char* CPluginAwesomium::ListCVars() const
     {
-        return "..."; // TODO: Enter CVARs/Commands here if you have some
+        return ""; // TODO: Enter CVARs/Commands here if you have some
     }
 
     const char* CPluginAwesomium::GetStatus() const
     {
         return "OK";
-    }
-
-    void MaterialCommand( IConsoleCmdArgs* pArgs )
-    {
-        auto entity = gEnv->pEntitySystem->FindEntityByName( pArgs->GetArg( 1 ) );
-
-        if ( entity )
-        {
-            auto material = entity->GetMaterial();
-
-            if ( material )
-            {
-                gEnv->pLog->LogAlways( "Found material %s", material->GetName() );
-            }
-        }
     }
 
     bool CPluginAwesomium::InitAwesomium()
@@ -69,24 +52,9 @@ namespace AwesomiumPlugin
         pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_Default );
 
         WebConfig config;
+        //todo: check if we are in debug mode - if in Editor then show the inspector on localhost:3000
         config.remote_debugging_port = 3000;
         m_pWebCore = WebCore::Initialize( config );
-
-        // Initialize DataPakSource
-        m_DataSource = NULL;
-
-        string sUIpak = gPluginManager->GetDirectoryGame();
-        sUIpak += "\\UIFiles.pak";
-
-        m_DataSource = new DataPakSource( WSLit( sUIpak ) );
-        LoadElement( "UI/lowerleft.htm" );
-        SetVisible( true );
-
-        gEnv->pConsole->RegisterInt( "aw_t0", 1, 0 );
-        gEnv->pConsole->RegisterInt( "aw_t1", 0, 0 );
-        gEnv->pConsole->RegisterInt( "aw_s0", 0, 0 );
-        gEnv->pConsole->RegisterInt( "aw_s1", 1, 0 );
-        gEnv->pConsole->AddCommand( "aw_material", MaterialCommand );
 
         return true;
 
@@ -98,22 +66,13 @@ namespace AwesomiumPlugin
 
     void CPluginAwesomium::OnPostUpdate( float fDeltaTime )
     {
-        if ( m_bVisible )
-        {
-            WebCore::instance()->Update();
-            std::for_each( std::begin( m_uiElements ), std::end( m_uiElements ), [&]( std::shared_ptr<HTMLElement>& e )
-            {
-                if ( e->IsVisible() )
-                {
-                    e->OnUpdate();
-                }
-            } );
-        }
+        WebCore::instance()->Update();
+
+        //todo: foreach element, render
     }
 
     void CPluginAwesomium::OnSaveGame( ISaveGame* pSaveGame )
     {
-
     }
 
     void CPluginAwesomium::OnLoadGame( ILoadGame* pLoadGame )
@@ -132,24 +91,6 @@ namespace AwesomiumPlugin
     {
     }
 
-    void CPluginAwesomium::SetVisible( bool visible )
-    {
-        m_bVisible = visible;
-    }
-
-    bool CPluginAwesomium::IsVisible() const
-    {
-        return m_bVisible;
-    }
-
-    int CPluginAwesomium::LoadElement( const char* pathToHtml )
-    {
-        auto element = std::make_shared<HTMLElement>( pathToHtml );
-
-        m_uiElements.push_back( element );
-
-        return 0;
-    }
 
     bool CPluginAwesomium::CheckDependencies() const
     {
