@@ -5,9 +5,12 @@
 #include <IUIDraw.h>
 #include <IEntitySystem.h>
 
+D3DPlugin::IPluginD3D* AwesomiumPlugin::gD3DSystem = NULL;
+void* AwesomiumPlugin::gD3DDevice = NULL;
 namespace AwesomiumPlugin
 {
     CPluginAwesomium* gPlugin = NULL;
+
 
     CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false )
     {
@@ -25,7 +28,10 @@ namespace AwesomiumPlugin
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
 
-        InitAwesomium();
+        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+        {
+            InitAwesomium();
+        }
 
         return true;
     }
@@ -40,63 +46,50 @@ namespace AwesomiumPlugin
         return "OK";
     }
 
-    bool CPluginAwesomium::InitAwesomium()
+    void CPluginAwesomium::InitAwesomium()
     {
         if ( !gEnv || !gEnv->pGame->GetIGameFramework() )
         {
             gEnv->pLog->LogError( "Failed to initialize Awesomium, no gameframework found. This is probably caused by calling the Init method too soon" );
-            return false;
+            return;
         }
 
-        IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
-        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_Default );
+        if ( !g_system )
+        {
+            g_system = new CAwesomiumSystem();
 
-        WebConfig config;
-        //todo: check if we are in debug mode - if in Editor then show the inspector on localhost:3000
-        config.remote_debugging_port = 3000;
-        m_pWebCore = WebCore::Initialize( config );
+            if ( gD3DSystem )
+            {
+                gD3DSystem->RegisterListener( g_system );
+            }
 
-        return true;
-
+            else
+            {
+                gEnv->pLog->LogError( "Failed to initialize Awesomium, no D3D device found. Probably InitAwesomium() was called before gD3D device was initialized." );
+            }
+        }
     }
-
-    void CPluginAwesomium::Shutdown()
-    {
-    }
-
-    void CPluginAwesomium::OnPostUpdate( float fDeltaTime )
-    {
-        WebCore::instance()->Update();
-
-        //todo: foreach element, render
-    }
-
-    void CPluginAwesomium::OnSaveGame( ISaveGame* pSaveGame )
-    {
-    }
-
-    void CPluginAwesomium::OnLoadGame( ILoadGame* pLoadGame )
-    {
-    }
-
-    void CPluginAwesomium::OnLevelEnd( const char* nextLevel )
-    {
-    }
-
-    void CPluginAwesomium::OnActionEvent( const SActionEvent& event )
-    {
-    }
-
-    void CPluginAwesomium::OnPreRender()
-    {
-    }
-
 
     bool CPluginAwesomium::CheckDependencies() const
     {
         bool bRet = CPluginBase::CheckDependencies();
 
+        if ( bRet )
+        {
+            bRet = PluginManager::safeGetPluginConcreteInterface<D3DPlugin::IPluginD3D*>( "D3D" );
+        }
+
         return bRet;
+    }
+
+    void CPluginAwesomium::ShutdownAwesomium()
+    {
+        //todo: shutdown existing UI elements
+        if ( g_system )
+        {
+            delete g_system;
+            g_system = NULL;
+        }
     }
 
     bool CPluginAwesomium::Release( bool bForce )
@@ -105,16 +98,18 @@ namespace AwesomiumPlugin
 
         if ( !m_bCanUnload )
         {
-            // Should be called while Game is still active otherwise there might be leaks/problems
             bRet = CPluginBase::Release( bForce );
 
             if ( bRet )
             {
-                // TODO: Do your own cleanups here
-                // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
-                gPluginManager->UnloadPlugin( GetName() );
+                ShutdownAwesomium();
 
-                // Allow Plugin Manager garbage collector to unload this plugin
+                if ( gD3DSystem )
+                {
+                    PluginManager::safeReleasePlugin( "D3D", gD3DSystem );
+                }
+
+                gPluginManager->UnloadPlugin( GetName() );
                 AllowDllUnload();
             }
         }
@@ -124,6 +119,16 @@ namespace AwesomiumPlugin
 
     bool CPluginAwesomium::InitDependencies()
     {
+        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+        {
+            gD3DSystem = PluginManager::safeUsePluginConcreteInterface<D3DPlugin::IPluginD3D*>( "D3D" );
+
+            if ( gD3DSystem )
+            {
+                gD3DDevice = gD3DSystem->GetDevice();
+            }
+        }
+
         return CPluginBase::InitDependencies();
     }
 }
