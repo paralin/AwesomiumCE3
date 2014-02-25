@@ -15,7 +15,7 @@ namespace AwesomiumPlugin
         public:
             CDX11StateGuard()
             {
-                ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DSystem->GetDevice() );
+                ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
                 ID3D11DeviceContext* pContext = NULL;
                 pDevice->GetImmediateContext( &pContext );
 
@@ -33,7 +33,7 @@ namespace AwesomiumPlugin
 
             ~CDX11StateGuard()
             {
-                ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DSystem->GetDevice() );
+                ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
                 ID3D11DeviceContext* pContext = NULL;
                 pDevice->GetImmediateContext( &pContext );
 
@@ -130,7 +130,7 @@ namespace AwesomiumPlugin
     //Borrowed from CoherentUI plugin
     void CFullscreenTriangleDrawer::CreateDX11Resources()
     {
-        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DSystem->GetDevice() );
+        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
 
         HRESULT hr = S_OK;
 
@@ -291,7 +291,7 @@ namespace AwesomiumPlugin
 
     void CFullscreenTriangleDrawer::DrawDX11( ID3D11ShaderResourceView* pTextureSRV )
     {
-        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DSystem->GetDevice() );
+        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
         ID3D11DeviceContext* pContext = NULL;
         pDevice->GetImmediateContext( &pContext );
 

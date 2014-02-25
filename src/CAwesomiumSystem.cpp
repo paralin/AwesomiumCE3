@@ -19,6 +19,15 @@ namespace AwesomiumPlugin
         //todo: check if we are in debug mode - if in Editor then show the inspector on localhost:3000
         config.remote_debugging_port = 3000;
         m_pWebCore = WebCore::Initialize( config );
+
+        if(gD3DSystem)
+        {
+           gD3DSystem->RegisterListener(this);
+           pEnv->pLog->Log(" Registered CAwesomiumSystem in D3D...");
+        }
+        else{
+          pEnv->pLog->LogError(" D3D not initialized when initing CAwesomiumSystem..");
+        }
     }
 
 
@@ -33,6 +42,11 @@ namespace AwesomiumPlugin
             }
         }
 
+        if( gD3DSystem )
+        {
+          gD3DSystem->UnregisterListener( this );
+        }
+
         if ( m_pWebCore )
         {
             m_pWebCore->Shutdown();
@@ -43,11 +57,11 @@ namespace AwesomiumPlugin
         {
             delete m_FullscreenDrawer;
         }
+        gEnv->pLog->Log("Awesomium System unloaded...");
     }
 
     void CAwesomiumSystem::OnPreRender()
     {
-        m_pWebCore->Update();
     }
 
     void CAwesomiumSystem::OnSaveGame( ISaveGame* pSaveGame )
@@ -73,7 +87,6 @@ namespace AwesomiumPlugin
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
         }
 
-        // Needs to be implemented
         if ( m_hudView )
         {
             void* pHUDTexture = m_hudView->GetTexture();
@@ -97,13 +110,17 @@ namespace AwesomiumPlugin
             iter->SetTexture( NULL, 0 );
         }
 
+        //Free the fullscreen drawer in reset
         delete m_FullscreenDrawer;
         m_FullscreenDrawer = NULL;
     }
 
     void CAwesomiumSystem::OnPostReset()
     {
-        m_FullscreenDrawer = new CFullscreenTriangleDrawer();
+       if( !m_FullscreenDrawer )
+       {
+            m_FullscreenDrawer = new CFullscreenTriangleDrawer();
+       }
 
         if ( m_hudView )
         {
@@ -117,8 +134,6 @@ namespace AwesomiumPlugin
 
         if ( m_hudView )
         {
-            // Note that calling any ViewListener's OnDraw will be called in this stack.
-            // Since we're in the render thread, it's safe to do drawing in the OnDraw method.
             m_hudView->DoDraw();
         }
     }

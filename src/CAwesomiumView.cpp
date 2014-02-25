@@ -54,7 +54,7 @@ namespace AwesomiumPlugin
     {
         ID3D11Texture2D* pTexture = static_cast<ID3D11Texture2D*>( m_pTexture );
 
-        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DSystem->GetDevice() );
+        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
         ID3D11DeviceContext* pContext = NULL;
         pDevice->GetImmediateContext( &pContext );
 
@@ -88,7 +88,7 @@ namespace AwesomiumPlugin
     void CAwesomiumView::DrawFrameDX11SharedMemory( int width, int height )
     {
         ID3D11Texture2D* pTexture = static_cast<ID3D11Texture2D*>( m_pTexture );
-        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DSystem->GetDevice() );
+        ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
         ID3D11DeviceContext* pContext = NULL;
         pDevice->GetImmediateContext( &pContext );
 

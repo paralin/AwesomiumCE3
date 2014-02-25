@@ -5,11 +5,11 @@
 #include <IUIDraw.h>
 #include <IEntitySystem.h>
 
-D3DPlugin::IPluginD3D* AwesomiumPlugin::gD3DSystem = NULL;
-void* AwesomiumPlugin::gD3DDevice = NULL;
 namespace AwesomiumPlugin
 {
     CPluginAwesomium* gPlugin = NULL;
+    D3DPlugin::IPluginD3D* gD3DSystem = NULL;
+    void* gD3DDevice = NULL;
 
 
     CPluginAwesomium::CPluginAwesomium() : m_bEnablePlugins( false )
@@ -56,17 +56,8 @@ namespace AwesomiumPlugin
 
         if ( !g_system )
         {
+            gEnv->pLog->Log(" Creating AwesomiumSystem... ");
             g_system = new CAwesomiumSystem();
-
-            if ( gD3DSystem )
-            {
-                gD3DSystem->RegisterListener( g_system );
-            }
-
-            else
-            {
-                gEnv->pLog->LogError( "Failed to initialize Awesomium, no D3D device found. Probably InitAwesomium() was called before gD3D device was initialized." );
-            }
         }
     }
 
@@ -84,7 +75,6 @@ namespace AwesomiumPlugin
 
     void CPluginAwesomium::ShutdownAwesomium()
     {
-        //todo: shutdown existing UI elements
         if ( g_system )
         {
             delete g_system;
