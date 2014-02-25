@@ -56,7 +56,7 @@ namespace AwesomiumPlugin
 
         if ( !g_system )
         {
-            gEnv->pLog->Log(" Creating AwesomiumSystem... ");
+            gEnv->pLog->Log( " Creating AwesomiumSystem... " );
             g_system = new CAwesomiumSystem();
         }
     }

@@ -20,13 +20,15 @@ namespace AwesomiumPlugin
         config.remote_debugging_port = 3000;
         m_pWebCore = WebCore::Initialize( config );
 
-        if(gD3DSystem)
+        if ( gD3DSystem )
         {
-           gD3DSystem->RegisterListener(this);
-           pEnv->pLog->Log(" Registered CAwesomiumSystem in D3D...");
+            gD3DSystem->RegisterListener( this );
+            gEnv->pLog->Log( " Registered CAwesomiumSystem in D3D..." );
         }
-        else{
-          pEnv->pLog->LogError(" D3D not initialized when initing CAwesomiumSystem..");
+
+        else
+        {
+            gEnv->pLog->LogError( " D3D not initialized when initing CAwesomiumSystem.." );
         }
     }
 
@@ -42,9 +44,9 @@ namespace AwesomiumPlugin
             }
         }
 
-        if( gD3DSystem )
+        if ( gD3DSystem )
         {
-          gD3DSystem->UnregisterListener( this );
+            gD3DSystem->UnregisterListener( this );
         }
 
         if ( m_pWebCore )
@@ -57,7 +59,8 @@ namespace AwesomiumPlugin
         {
             delete m_FullscreenDrawer;
         }
-        gEnv->pLog->Log("Awesomium System unloaded...");
+
+        gEnv->pLog->Log( "Awesomium System unloaded..." );
     }
 
     void CAwesomiumSystem::OnPreRender()
@@ -117,10 +120,10 @@ namespace AwesomiumPlugin
 
     void CAwesomiumSystem::OnPostReset()
     {
-       if( !m_FullscreenDrawer )
-       {
+        if ( !m_FullscreenDrawer )
+        {
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
-       }
+        }
 
         if ( m_hudView )
         {
