@@ -30,6 +30,7 @@ Coming Soon
 Install Guide / Wiki
 ==========
 [Wiki Index](https://github.com/kidovate/AwesomiumCE3/wiki)
+
 [Install Guide](https://github.com/kidovate/AwesomiumCE3/wiki/Install-Guide)
 
 CVars
