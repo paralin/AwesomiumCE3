@@ -15,22 +15,11 @@ using namespace Awesomium;
 namespace AwesomiumPlugin
 {
     class CAwesomiumSystem :
-        public IGameFrameworkListener,
         public D3DPlugin::ID3DEventListener
     {
         public:
             CAwesomiumSystem( void );
             ~CAwesomiumSystem( void );
-
-            static WebCore* m_pWebCore;
-
-            // IGameFramework
-            virtual void OnPostUpdate( float fDeltaTime ) override;
-            virtual void OnSaveGame( ISaveGame* pSaveGame ) override;
-            virtual void OnLoadGame( ILoadGame* pLoadGame ) override;
-            virtual void OnLevelEnd( const char* nextLevel ) override;
-            virtual void OnActionEvent( const SActionEvent& event ) override;
-            virtual void OnPreRender() override;
 
             // ID3DListener methods
             virtual void OnPrePresent() override;
@@ -41,11 +30,12 @@ namespace AwesomiumPlugin
 
             void SetTexturesForListeners();
             void ChangeEntityDiffuseTextureForMaterial( CAwesomiumView* pViewListener, const char* entityName, const char* materialName );
-
+            static bool g_WebCoreInit;
         private:
             CFullscreenTriangleDrawer* m_FullscreenDrawer;
             CAwesomiumView* m_hudView;
             std::vector<CAwesomiumView> m_views;
+
 
             void UpdateHUD();
     };

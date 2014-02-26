@@ -16,7 +16,7 @@ namespace AwesomiumPlugin
     {
         this->width = width;
         this->height = height;
-        m_pView = CAwesomiumSystem::m_pWebCore->CreateWebView( width, height );
+        m_pView = WebCore::instance()->CreateWebView( width, height );
     }
 
     CAwesomiumView::~CAwesomiumView( void )

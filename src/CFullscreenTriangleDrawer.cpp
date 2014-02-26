@@ -122,8 +122,6 @@ namespace AwesomiumPlugin
         , m_pPixelShader11( NULL )
         , m_pBlendState11( NULL )
     {
-        ERenderType renderType = gEnv->pRenderer->GetRenderType();
-
         CreateDX11Resources();
     }
 

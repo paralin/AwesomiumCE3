@@ -7,87 +7,77 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 
-WebCore* AwesomiumPlugin::CAwesomiumSystem::m_pWebCore = NULL;
+bool AwesomiumPlugin::CAwesomiumSystem::g_WebCoreInit = false;
 namespace AwesomiumPlugin
 {
     CAwesomiumSystem::CAwesomiumSystem( void )
+        : m_FullscreenDrawer( NULL ),
+          m_hudView( NULL )
     {
-        IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
-        pGameFramework->RegisterListener( this, "AwesomiumCE3", eFLPriority_Default );
-
         WebConfig config;
         //todo: check if we are in debug mode - if in Editor then show the inspector on localhost:3000
-        config.remote_debugging_port = 3000;
-        m_pWebCore = WebCore::Initialize( config );
+
+        if ( !g_WebCoreInit )
+        {
+            config.remote_debugging_port = 3000;
+            g_WebCoreInit = true;
+            WebCore::Initialize( config );
+        }
 
         if ( gD3DSystem )
         {
             gD3DSystem->RegisterListener( this );
-            gEnv->pLog->Log( " Registered CAwesomiumSystem in D3D..." );
+            gEnv->pLog->Log( PLUGIN_CONSOLE_PREFIX " Registered CAwesomiumSystem in D3D..." );
         }
 
         else
         {
-            gEnv->pLog->LogError( " D3D not initialized when initing CAwesomiumSystem.." );
+            gEnv->pLog->LogError( PLUGIN_CONSOLE_PREFIX " D3D not initialized when initing CAwesomiumSystem.." );
         }
     }
 
 
     CAwesomiumSystem::~CAwesomiumSystem( void )
     {
-        // unregister listeners
-        if ( gEnv )
-        {
-            if ( gEnv->pGame && gEnv->pGame->GetIGameFramework() )
-            {
-                gEnv->pGame->GetIGameFramework()->UnregisterListener( this );
-            }
-        }
-
         if ( gD3DSystem )
         {
             gD3DSystem->UnregisterListener( this );
         }
 
-        if ( m_pWebCore )
+        if ( g_WebCoreInit )
         {
-            m_pWebCore->Shutdown();
-            m_pWebCore = NULL;
+            //Could cause issues if all of the subviews are not de-inited first
+            WebCore::Shutdown();
+            g_WebCoreInit = false;
         }
 
         if ( m_FullscreenDrawer )
         {
+            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Deleting fullscreen drawer" );
             delete m_FullscreenDrawer;
         }
 
-        gEnv->pLog->Log( "Awesomium System unloaded..." );
+        gEnv->pLog->Log( PLUGIN_CONSOLE_PREFIX " Awesomium System unloaded..." );
     }
 
-    void CAwesomiumSystem::OnPreRender()
-    {
-    }
+    //This code needs to go somewhere: (OnPreUpdate)
+    /*
+        SetTexturesForListeners();
+        m_pWebCore->Update();
 
-    void CAwesomiumSystem::OnSaveGame( ISaveGame* pSaveGame )
-    {
-    }
-
-    void CAwesomiumSystem::OnLoadGame( ILoadGame* pLoadGame )
-    {
-    }
-
-    void CAwesomiumSystem::OnLevelEnd( const char* nextLevel )
-    {
-    }
-
-    void CAwesomiumSystem::OnActionEvent( const SActionEvent& event )
-    {
-    }
+        if ( m_hudView )
+        {
+            UpdateHUD();
+        }
+    */
 
     void CAwesomiumSystem::OnPrePresent()
     {
         if ( !m_FullscreenDrawer )
         {
+            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Creating a new TriangleDrawer in OnPrePresent" );
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
+            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Fullscreen drawer created. " );
         }
 
         if ( m_hudView )
@@ -114,6 +104,7 @@ namespace AwesomiumPlugin
         }
 
         //Free the fullscreen drawer in reset
+        CryLogAlways( PLUGIN_CONSOLE_PREFIX "Deleting fullscreen drawer" );
         delete m_FullscreenDrawer;
         m_FullscreenDrawer = NULL;
     }
@@ -122,7 +113,9 @@ namespace AwesomiumPlugin
     {
         if ( !m_FullscreenDrawer )
         {
+            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Creating a new TriangleDrawer in OnPostReset" );
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
+            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Fullscreen drawer created. " );
         }
 
         if ( m_hudView )
@@ -138,18 +131,6 @@ namespace AwesomiumPlugin
         if ( m_hudView )
         {
             m_hudView->DoDraw();
-        }
-    }
-
-    void CAwesomiumSystem::OnPostUpdate( float fDeltaTime )
-    {
-        SetTexturesForListeners();
-
-        m_pWebCore->Update();
-
-        if ( m_hudView )
-        {
-            UpdateHUD();
         }
     }
 

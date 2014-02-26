@@ -20,6 +20,8 @@ namespace AwesomiumPlugin
     CPluginAwesomium::~CPluginAwesomium()
     {
         gPlugin = NULL;
+        gD3DSystem = NULL;
+        gD3DDevice = NULL;
     }
 
 
@@ -27,11 +29,6 @@ namespace AwesomiumPlugin
     {
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
-
-        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
-        {
-            InitAwesomium();
-        }
 
         return true;
     }
@@ -50,13 +47,13 @@ namespace AwesomiumPlugin
     {
         if ( !gEnv || !gEnv->pGame->GetIGameFramework() )
         {
-            gEnv->pLog->LogError( "Failed to initialize Awesomium, no gameframework found. This is probably caused by calling the Init method too soon" );
+            gEnv->pLog->LogError( PLUGIN_CONSOLE_PREFIX " Failed to initialize Awesomium, no gameframework found. This is probably caused by calling the Init method too soon" );
             return;
         }
 
         if ( !g_system )
         {
-            gEnv->pLog->Log( " Creating AwesomiumSystem... " );
+            gEnv->pLog->Log( PLUGIN_CONSOLE_PREFIX " Creating AwesomiumSystem... " );
             g_system = new CAwesomiumSystem();
         }
     }
@@ -116,6 +113,7 @@ namespace AwesomiumPlugin
             if ( gD3DSystem )
             {
                 gD3DDevice = gD3DSystem->GetDevice();
+                InitAwesomium();
             }
         }
 
