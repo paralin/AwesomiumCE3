@@ -1,26 +1,37 @@
 Awesomium Plugin for CryEngine SDK
 =====================================
-This was originally a plugin with a ton of spaghetti code to try and get Awesomium working in CE3.
+![Demo Image](http://img703.imageshack.us/img703/310/rctx.png)
 
-I (kidovate) have forked the repository to clean up the code and try to get it to a more finished form.
+This plugin allows you to render any HTML website or local HTML file structure to any surface / material in the engine. It also includes a full screen triangle renderer for rendering to screenspace, as opposed to world space.
 
+It is based on the [Awesomium](http://awesomium.com) library which performs the heavy lifting for rendering the page. This plugin uses DirectX11 to render the image buffer to the screen, or to a CryEngine material. The engine can then use the material to render the page on to any object.
 
-Installation / Integration
-==========================
-Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
+Rendering is done in realtime, and thus supports YouTube videos, and even online browser-based games. Yes, you could play a webGL game in your CryEngine game, on a wall.
 
-The plugin manager will automatically load up the plugin when the game/editor is restarted or if you directly load it.
+This plugin has been completely rewritten since the original plugin was released by darman96.
+
+Inspector
+==========
+You can access the inspector locally by navigating to [http://localhost:3000/](http://localhost:3000).
+
+On default this is on all the time, however, a planned feature is to only enable this while in the game, and use a CVar to update the port / disable the inspector.
+
+Note that the inspector only updates when the engine is rendering... So if you tab out of the engine, it will, on default, pause the rendering and the Inspector will not update until you tab back in again.
+
+Coming Soon
+===========
+  - Keyboard and Mouse interaction with the views
+  - LUA support
+  - C++ interface
+  - FlowNodes
+  - Console Variables
+  - Disable / Enable Inspector
 
 CVars
 =====
-None at the moment.
+Coming soon.
 
 Flownodes
 =========
-Documentation not done yet.
+Coming soon.
 
-Objects
-=======
-Documentation not done yet.
-
-...

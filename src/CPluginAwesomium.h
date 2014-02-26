@@ -9,17 +9,13 @@
 #include <CPluginBase.hpp>
 
 #include <IPluginAwesomium.h>
-#include <UIElement.h>
 
-#include <IGameFramework.h>
-#include <Awesomium\WebCore.h>
-#include <Awesomium\DataPak.h>
-#include <Awesomium\STLHelpers.h>
+#include <IPluginD3D.h>
+
+#include "CAwesomiumSystem.h"
 
 #define PLUGIN_NAME "Awesomium"
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
-
-using namespace Awesomium;
 
 namespace AwesomiumPlugin
 {
@@ -28,15 +24,12 @@ namespace AwesomiumPlugin
     */
     class CPluginAwesomium :
         public PluginManager::CPluginBase,
-        public IPluginAwesomium,
-        public IGameFrameworkListener
+        public IPluginAwesomium
     {
         public:
             CPluginAwesomium();
             ~CPluginAwesomium();
 
-            // IPluginBase
-            bool Release( bool bForce = false );
 
             int GetInitializationMode() const
             {
@@ -85,31 +78,22 @@ namespace AwesomiumPlugin
                 return static_cast<IPluginBase*>( this );
             };
 
-            virtual bool InitAwesomium() override;
-            virtual void Shutdown() override;
-            virtual void SetVisible( bool visible ) override;
-            virtual bool IsVisible() const override;
+            virtual void InitAwesomium() override;
+            virtual void ShutdownAwesomium() override;
 
-            // IGameFramework
-            virtual void OnPostUpdate( float fDeltaTime ) override;
-            virtual void OnSaveGame( ISaveGame* pSaveGame ) override;
-            virtual void OnLoadGame( ILoadGame* pLoadGame ) override;
-            virtual void OnLevelEnd( const char* nextLevel ) override;
-            virtual void OnActionEvent( const SActionEvent& event ) override;
-            virtual void OnPreRender() override;
+            bool CPluginAwesomium::InitDependencies();
+            bool CPluginAwesomium::Release( bool bForce );
+            bool CPluginAwesomium::CheckDependencies() const;
 
             bool m_bEnablePlugins;
-            bool m_bVisible;
-            std::vector<std::shared_ptr<CUIElement>> m_uiElements;
-            WebCore* m_pWebCore;
-            DataSource* m_DataSource;
 
-            virtual int LoadElement( const char* pathToHtml );
-
+            CAwesomiumSystem* g_system;
     };
-
+    extern D3DPlugin::IPluginD3D* gD3DSystem;
+    extern void* gD3DDevice;
     extern CPluginAwesomium* gPlugin;
 }
+
 
 /**
 * @brief This function is required to use the Autoregister Flownode without modification.

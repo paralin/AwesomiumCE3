@@ -20,23 +20,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\authors.txt" />
-    <None Include="..\license.txt" />
     <None Include="..\readme.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\CAwesomiumSystem.cpp" />
+    <ClCompile Include="..\src\CAwesomiumView.cpp" />
+    <ClCompile Include="..\src\CFullscreenTriangleDrawer.cpp" />
     <ClCompile Include="..\src\CPluginAwesomium.cpp" />
     <ClCompile Include="..\src\CPluginAwesomiumModule.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\IPluginAwesomium.h" />
+    <ClInclude Include="..\src\CAwesomiumSystem.h" />
+    <ClInclude Include="..\src\CAwesomiumView.h" />
+    <ClInclude Include="..\src\CFullscreenTriangleDrawer.h" />
     <ClInclude Include="..\src\CPluginAwesomium.h" />
     <ClInclude Include="..\src\StdAfx.h" />
-    <ClInclude Include="..\src\UIElement.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -165,7 +168,7 @@ stylecode.bat</Command>
     <ClCompile>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\awesomium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\awesomium\include;$(ProjectDir)\..\..\Plugin_D3D\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_FORCEDLL;PURE_CLIENT;AWESOMIUMPLUGIN_EXPORTS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <FloatingPointModel>Precise</FloatingPointModel>
@@ -182,8 +185,9 @@ stylecode.bat</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>awesomium.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\awesomium\build\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>awesomium.lib;Plugin_D3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(ProjectDir)..\awesomium\build\lib;$(ProjectDir)\..\..\..\Bin32\Plugins\D3D;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
     <PreBuildEvent>
       <Command>rmdir /S /Q "$(OutDir)"
