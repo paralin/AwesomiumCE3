@@ -7,9 +7,6 @@
 
 namespace AwesomiumPlugin
 {
-    // Borrowed from CoherentUI plugin.
-    // An incomplete DX11 state guard class that saves and restores the
-    // states and resources that will be modified during the drawing in the hooked function
     class CDX11StateGuard
     {
         public:
@@ -125,7 +122,6 @@ namespace AwesomiumPlugin
         CreateDX11Resources();
     }
 
-    //Borrowed from CoherentUI plugin
     void CFullscreenTriangleDrawer::CreateDX11Resources()
     {
         ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );

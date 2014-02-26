@@ -11,6 +11,9 @@
 
 #include "CAwesomiumView.h"
 
+//Comment if you don't want a default view to be created at start
+#define TEST_VIEW
+
 using namespace Awesomium;
 namespace AwesomiumPlugin
 {

@@ -7,8 +7,6 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 
-#define TEST_VIEW
-
 bool AwesomiumPlugin::CAwesomiumSystem::g_WebCoreInit = false;
 namespace AwesomiumPlugin
 {
@@ -78,6 +76,12 @@ namespace AwesomiumPlugin
 
     void CAwesomiumSystem::OnPrePresent()
     {
+
+        if ( g_WebCoreInit )
+        {
+            WebCore::instance()->Update();
+        }
+
         if ( !m_FullscreenDrawer )
         {
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
@@ -219,11 +223,6 @@ namespace AwesomiumPlugin
     {
         SetTexturesForListeners();
 
-        if ( g_WebCoreInit )
-        {
-            WebCore::instance()->Update();
-        }
-
         if ( m_hudView )
         {
             UpdateHUD();
@@ -240,6 +239,10 @@ namespace AwesomiumPlugin
 
     void CAwesomiumSystem::OnLevelEnd( const char* nextLevel )
     {
+        for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
+        {
+            ( *iter )->SetTexture( NULL, 0 );
+        }
     }
 
     void CAwesomiumSystem::OnActionEvent( const SActionEvent& event )

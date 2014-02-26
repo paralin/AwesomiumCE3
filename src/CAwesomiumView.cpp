@@ -24,7 +24,10 @@ namespace AwesomiumPlugin
 
         //Debug
         m_pView->Focus();
-        m_pView->LoadURL( WebURL( WSLit( "http://www.google.com/" ) ) );
+
+#ifdef TEST_VIEW
+        m_pView->LoadURL( WebURL( WSLit( "https://www.crydev.net/" ) ) );
+#endif
     }
 
     CAwesomiumView::~CAwesomiumView( void )
