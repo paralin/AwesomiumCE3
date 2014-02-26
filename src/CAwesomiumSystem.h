@@ -15,7 +15,8 @@ using namespace Awesomium;
 namespace AwesomiumPlugin
 {
     class CAwesomiumSystem :
-        public D3DPlugin::ID3DEventListener
+        public D3DPlugin::ID3DEventListener,
+        public IGameFrameworkListener
     {
         public:
             CAwesomiumSystem( void );
@@ -28,13 +29,21 @@ namespace AwesomiumPlugin
             virtual void OnPostReset() override;
             virtual void OnPostBeginScene() override;
 
+            // IGameFramework
+            virtual void OnPostUpdate( float fDeltaTime ) override;
+            virtual void OnSaveGame( ISaveGame* pSaveGame ) override;
+            virtual void OnLoadGame( ILoadGame* pLoadGame ) override;
+            virtual void OnLevelEnd( const char* nextLevel ) override;
+            virtual void OnActionEvent( const SActionEvent& event ) override;
+            virtual void OnPreRender() override;
+
             void SetTexturesForListeners();
             void ChangeEntityDiffuseTextureForMaterial( CAwesomiumView* pViewListener, const char* entityName, const char* materialName );
             static bool g_WebCoreInit;
         private:
             CFullscreenTriangleDrawer* m_FullscreenDrawer;
             CAwesomiumView* m_hudView;
-            std::vector<CAwesomiumView> m_views;
+            std::vector<CAwesomiumView*> m_views;
 
 
             void UpdateHUD();

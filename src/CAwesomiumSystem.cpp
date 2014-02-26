@@ -7,6 +7,8 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 
+#define TEST_VIEW
+
 bool AwesomiumPlugin::CAwesomiumSystem::g_WebCoreInit = false;
 namespace AwesomiumPlugin
 {
@@ -27,13 +29,20 @@ namespace AwesomiumPlugin
         if ( gD3DSystem )
         {
             gD3DSystem->RegisterListener( this );
-            gEnv->pLog->Log( PLUGIN_CONSOLE_PREFIX " Registered CAwesomiumSystem in D3D..." );
         }
 
         else
         {
             gEnv->pLog->LogError( PLUGIN_CONSOLE_PREFIX " D3D not initialized when initing CAwesomiumSystem.." );
         }
+
+        IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
+        pGameFramework->RegisterListener( this, "CAwesomiumSystem", eFLPriority_Default );
+
+#ifdef TEST_VIEW
+        CAwesomiumView* view = new CAwesomiumView( 1000, 1000, "TestScreen", "Materials/ReplacedSquareUI" );
+        m_views.push_back( view );
+#endif
     }
 
 
@@ -44,6 +53,14 @@ namespace AwesomiumPlugin
             gD3DSystem->UnregisterListener( this );
         }
 
+        for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
+        {
+            CAwesomiumView* view = ( *iter );
+            delete view;
+        }
+
+        m_views.clear();
+
         if ( g_WebCoreInit )
         {
             //Could cause issues if all of the subviews are not de-inited first
@@ -53,31 +70,17 @@ namespace AwesomiumPlugin
 
         if ( m_FullscreenDrawer )
         {
-            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Deleting fullscreen drawer" );
             delete m_FullscreenDrawer;
         }
 
         gEnv->pLog->Log( PLUGIN_CONSOLE_PREFIX " Awesomium System unloaded..." );
     }
 
-    //This code needs to go somewhere: (OnPreUpdate)
-    /*
-        SetTexturesForListeners();
-        m_pWebCore->Update();
-
-        if ( m_hudView )
-        {
-            UpdateHUD();
-        }
-    */
-
     void CAwesomiumSystem::OnPrePresent()
     {
         if ( !m_FullscreenDrawer )
         {
-            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Creating a new TriangleDrawer in OnPrePresent" );
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
-            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Fullscreen drawer created. " );
         }
 
         if ( m_hudView )
@@ -98,13 +101,12 @@ namespace AwesomiumPlugin
             m_hudView->ReleaseTexture();
         }
 
-        for ( std::vector<CAwesomiumView>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
+        for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
         {
-            iter->SetTexture( NULL, 0 );
+            ( *iter )->SetTexture( NULL, 0 );
         }
 
         //Free the fullscreen drawer in reset
-        CryLogAlways( PLUGIN_CONSOLE_PREFIX "Deleting fullscreen drawer" );
         delete m_FullscreenDrawer;
         m_FullscreenDrawer = NULL;
     }
@@ -113,14 +115,15 @@ namespace AwesomiumPlugin
     {
         if ( !m_FullscreenDrawer )
         {
-            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Creating a new TriangleDrawer in OnPostReset" );
             m_FullscreenDrawer = new CFullscreenTriangleDrawer();
-            CryLogAlways( PLUGIN_CONSOLE_PREFIX " Fullscreen drawer created. " );
         }
 
-        if ( m_hudView )
+        int width( gEnv->pRenderer->GetWidth() );
+        int height( gEnv->pRenderer->GetHeight() );
+
+        if ( m_hudView && m_hudView->width != width && m_hudView->height != height )
         {
-            m_hudView->Resize( gEnv->pRenderer->GetWidth(), gEnv->pRenderer->GetHeight() );
+            m_hudView->Resize( width, height );
         }
     }
 
@@ -131,6 +134,11 @@ namespace AwesomiumPlugin
         if ( m_hudView )
         {
             m_hudView->DoDraw();
+        }
+
+        for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
+        {
+            ( *iter )->DoDraw();
         }
     }
 
@@ -157,11 +165,13 @@ namespace AwesomiumPlugin
         }
 
         // Create textures for entities
-        for ( std::vector<CAwesomiumView>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
+        for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
         {
-            if ( pListener && pListener->GetTexture() == NULL )
+            CAwesomiumView* view = ( *iter );
+
+            if ( view && view->GetTexture() == NULL )
             {
-                ChangeEntityDiffuseTextureForMaterial( pListener, pListener->GetEngineObjectName(), pListener->GetOverriddenMaterialName() );
+                ChangeEntityDiffuseTextureForMaterial( view, view->GetEngineObjectName(), view->GetOverriddenMaterialName() );
             }
         }
     }
@@ -202,6 +212,42 @@ namespace AwesomiumPlugin
 
             pViewListener->SetTexture( pD3DTextureDst, pCryTex->GetTextureID() );
         }
+    }
+
+    //IGameFramework
+    void CAwesomiumSystem::OnPostUpdate( float fDeltaTime )
+    {
+        SetTexturesForListeners();
+
+        if ( g_WebCoreInit )
+        {
+            WebCore::instance()->Update();
+        }
+
+        if ( m_hudView )
+        {
+            UpdateHUD();
+        }
+    }
+
+    void CAwesomiumSystem::OnSaveGame( ISaveGame* pSaveGame )
+    {
+    }
+
+    void CAwesomiumSystem::OnLoadGame( ILoadGame* pLoadGame )
+    {
+    }
+
+    void CAwesomiumSystem::OnLevelEnd( const char* nextLevel )
+    {
+    }
+
+    void CAwesomiumSystem::OnActionEvent( const SActionEvent& event )
+    {
+    }
+
+    void CAwesomiumSystem::OnPreRender()
+    {
     }
 
     void CAwesomiumSystem::UpdateHUD()

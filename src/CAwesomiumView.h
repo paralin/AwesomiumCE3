@@ -10,7 +10,7 @@ namespace AwesomiumPlugin
     class CAwesomiumView
     {
         public:
-            CAwesomiumView( int width, int height );
+            CAwesomiumView( int width, int height, const char* objName, const char* matName );
             ~CAwesomiumView( void );
 
             void SetTexture( void* pTexture, int cryTexID );
@@ -30,13 +30,14 @@ namespace AwesomiumPlugin
 
             void SetEngineObjectAndMaterialNames( const char* engineObjectName, const char* materialToOverrideName );
 
+            int width;
+            int height;
         private:
             void* m_pTexture; // IDirect3D9Texture* or ID3D11Texture2D*
             Awesomium::WebView* m_pView;
             int m_CryTextureID;
 
-            int width;
-            int height;
+
 
             string m_EngineObjectName;
             string m_MaterialToOverrideName;

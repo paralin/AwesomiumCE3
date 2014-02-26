@@ -10,13 +10,21 @@
 namespace AwesomiumPlugin
 {
 
-    CAwesomiumView::CAwesomiumView( int width, int height )
+    CAwesomiumView::CAwesomiumView( int width, int height, const char* objName, const char* matName )
         : m_pTextureSRV( NULL ),
-          m_CryTextureID( 0 )
+          m_CryTextureID( 0 ),
+          m_pView( NULL ),
+          m_pTexture( NULL ),
+          m_EngineObjectName( objName ),
+          m_MaterialToOverrideName( matName )
     {
         this->width = width;
         this->height = height;
         m_pView = WebCore::instance()->CreateWebView( width, height );
+
+        //Debug
+        m_pView->Focus();
+        m_pView->LoadURL( WebURL( WSLit( "http://www.google.com/" ) ) );
     }
 
     CAwesomiumView::~CAwesomiumView( void )
@@ -25,19 +33,33 @@ namespace AwesomiumPlugin
 
         if ( m_pView )
         {
-            m_pView->Destroy();
-            m_pView = NULL;
+            m_pView->Stop();
+
+            while ( m_pView->IsLoading() )
+            {
+                WebCore::instance()->Update();
+                Sleep( 50 );
+            }
         }
     }
 
     void CAwesomiumView::ReleaseTexture()
     {
         SAFE_RELEASE( m_pTextureSRV );
+
+        if ( m_pTexture )
+        {
+            gEnv->pRenderer->RemoveTexture( m_CryTextureID );
+            ID3D11Texture2D* pTexture = static_cast<ID3D11Texture2D*>( m_pTexture );
+            pTexture->Release();
+            m_pTexture = NULL;
+            m_CryTextureID = 0;
+        }
     }
 
     void* CAwesomiumView::GetTexture() const
     {
-        return m_pTextureSRV;
+        return m_pTexture;
     }
 
     void CAwesomiumView::SetTexture( void* pTexture, int cryTexID )
@@ -87,6 +109,13 @@ namespace AwesomiumPlugin
 
     void CAwesomiumView::DrawFrameDX11SharedMemory( int width, int height )
     {
+        BitmapSurface* surface = ( Awesomium::BitmapSurface* )( m_pView->surface() );
+
+        if ( surface == NULL )
+        {
+            return;
+        }
+
         ID3D11Texture2D* pTexture = static_cast<ID3D11Texture2D*>( m_pTexture );
         ID3D11Device* pDevice = static_cast<ID3D11Device*>( gD3DDevice );
         ID3D11DeviceContext* pContext = NULL;
@@ -101,7 +130,7 @@ namespace AwesomiumPlugin
         }
 
         const size_t size = width * height * 4;
-        char* pSrc = reinterpret_cast<char*>( const_cast<unsigned char*>( ( ( Awesomium::BitmapSurface* )( m_pView->surface() ) )->buffer() ) );
+        char* pSrc = reinterpret_cast<char*>( const_cast<unsigned char*>( ( surface )->buffer() ) );
 
         if ( pSrc == NULL )
         {
