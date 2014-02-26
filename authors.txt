@@ -1,3 +1,5 @@
+New plugin authored by Christian Stewart (kidovate)
+
+Original plugin written by
 Erik Simon
 Hendrik Polczynsk <hendrikpolczyn at gmail dot com>
-Christian Stewart

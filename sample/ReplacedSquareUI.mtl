@@ -1,0 +1,5 @@
+<Material MtlFlags="524288" Shader="ReferenceImage" GenMask="0" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="1,1,1" Emissive="0,0,0" Opacity="1" AlphaTest="1" CloakAmount="0" LayerAct="1">
+ <Textures>
+  <Texture Map="Diffuse" File="uiplaceholder.tif"/>
+ </Textures>
+</Material>
