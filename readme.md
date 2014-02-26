@@ -1,30 +1,37 @@
 Awesomium Plugin for CryEngine SDK
 =====================================
-A completely new method of rendering Awesomium in CryEngine using D3D. 
+![Demo Image](http://img703.imageshack.us/img703/310/rctx.png)
 
-This plugin has been almost completely rewritten from the original implementation.
+This plugin allows you to render any HTML website or local HTML file structure to any surface / material in the engine. It also includes a full screen triangle renderer for rendering to screenspace, as opposed to world space.
 
-Coherent UI plugin rendering code used as reference for D3D rendering.
+It is based on the [Awesomium](http://awesomium.com) library which performs the heavy lifting for rendering the page. This plugin uses DirectX11 to render the image buffer to the screen, or to a CryEngine material. The engine can then use the material to render the page on to any object.
 
+Rendering is done in realtime, and thus supports YouTube videos, and even online browser-based games. Yes, you could play a webGL game in your CryEngine game, on a wall.
 
-Installation / Integration
-==========================
-Clone this repository to the "Code" directory. Add the project (project/Awesomium) to your CryEngine_GameCodeOnly solution.
+This plugin has been completely rewritten since the original plugin was released by darman96.
 
-It's recommended to use submodules if you're using Git for your Code directory versioning.
+Inspector
+==========
+You can access the inspector locally by navigating to [http://localhost:3000/](http://localhost:3000).
 
-Make sure you have Plugin_D3D built the same way, along with Plugin_SDK.
+On default this is on all the time, however, a planned feature is to only enable this while in the game, and use a CVar to update the port / disable the inspector.
 
-The plugin manager will automatically load up the plugin when the game/editor is restarted or if you directly load it.
+Note that the inspector only updates when the engine is rendering... So if you tab out of the engine, it will, on default, pause the rendering and the Inspector will not update until you tab back in again.
+
+Coming Soon
+===========
+  - Keyboard and Mouse interaction with the views
+  - LUA support
+  - C++ interface
+  - FlowNodes
+  - Console Variables
+  - Disable / Enable Inspector
 
 CVars
 =====
-None at the moment.
+Coming soon.
 
 Flownodes
 =========
 Coming soon.
 
-Objects
-=======
-Coming soon.
