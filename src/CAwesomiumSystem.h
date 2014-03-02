@@ -44,8 +44,6 @@ namespace AwesomiumPlugin
             void ChangeEntityDiffuseTextureForMaterial( CAwesomiumView* pViewListener, const char* entityName, const char* materialName );
             static bool g_WebCoreInit;
         private:
-            CFullscreenTriangleDrawer* m_FullscreenDrawer;
-            CAwesomiumView* m_hudView;
             std::vector<CAwesomiumView*> m_views;
 
 

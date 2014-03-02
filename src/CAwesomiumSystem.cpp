@@ -11,8 +11,6 @@ bool AwesomiumPlugin::CAwesomiumSystem::g_WebCoreInit = false;
 namespace AwesomiumPlugin
 {
     CAwesomiumSystem::CAwesomiumSystem( void )
-        : m_FullscreenDrawer( NULL ),
-          m_hudView( NULL )
     {
         WebConfig config;
         //todo: check if we are in debug mode - if in Editor then show the inspector on localhost:3000
@@ -66,11 +64,6 @@ namespace AwesomiumPlugin
             g_WebCoreInit = false;
         }
 
-        if ( m_FullscreenDrawer )
-        {
-            delete m_FullscreenDrawer;
-        }
-
         gEnv->pLog->Log( PLUGIN_CONSOLE_PREFIX " Awesomium System unloaded..." );
     }
 
@@ -81,64 +74,24 @@ namespace AwesomiumPlugin
         {
             WebCore::instance()->Update();
         }
-
-        if ( !m_FullscreenDrawer )
-        {
-            m_FullscreenDrawer = new CFullscreenTriangleDrawer();
-        }
-
-        if ( m_hudView )
-        {
-            void* pHUDTexture = m_hudView->GetTexture();
-
-            if ( pHUDTexture )
-            {
-                m_FullscreenDrawer->Draw( pHUDTexture );
-            }
-        }
     }
 
     void CAwesomiumSystem::OnPreReset()
     {
-        if ( m_hudView )
-        {
-            m_hudView->ReleaseTexture();
-        }
 
         for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
         {
             ( *iter )->SetTexture( NULL, 0 );
         }
-
-        //Free the fullscreen drawer in reset
-        delete m_FullscreenDrawer;
-        m_FullscreenDrawer = NULL;
     }
 
     void CAwesomiumSystem::OnPostReset()
     {
-        if ( !m_FullscreenDrawer )
-        {
-            m_FullscreenDrawer = new CFullscreenTriangleDrawer();
-        }
-
-        int width( gEnv->pRenderer->GetWidth() );
-        int height( gEnv->pRenderer->GetHeight() );
-
-        if ( m_hudView && m_hudView->width != width && m_hudView->height != height )
-        {
-            m_hudView->Resize( width, height );
-        }
     }
 
     void CAwesomiumSystem::OnPostBeginScene()
     {
         //ExecutePendingCreateSurfaceTasks();
-
-        if ( m_hudView )
-        {
-            m_hudView->DoDraw();
-        }
 
         for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
         {
@@ -148,26 +101,6 @@ namespace AwesomiumPlugin
 
     void CAwesomiumSystem::SetTexturesForListeners()
     {
-        CAwesomiumView* pListener = NULL;
-
-        // Create HUD texture
-        pListener = m_hudView;
-
-        if ( pListener && pListener->GetTexture() == NULL )
-        {
-            void* pD3DTextureDst = NULL;
-            ITexture* pCryTex = gD3DSystem->CreateTexture(
-                                    &pD3DTextureDst,
-                                    gEnv->pRenderer->GetWidth(),
-                                    gEnv->pRenderer->GetHeight(),
-                                    1,
-                                    eTF_A8R8G8B8,
-                                    FT_USAGE_DYNAMIC
-                                );
-
-            pListener->SetTexture( pD3DTextureDst, pCryTex->GetTextureID() );
-        }
-
         // Create textures for entities
         for ( std::vector<CAwesomiumView*>::iterator iter = m_views.begin(); iter != m_views.end(); ++iter )
         {
@@ -222,11 +155,6 @@ namespace AwesomiumPlugin
     void CAwesomiumSystem::OnPostUpdate( float fDeltaTime )
     {
         SetTexturesForListeners();
-
-        if ( m_hudView )
-        {
-            UpdateHUD();
-        }
     }
 
     void CAwesomiumSystem::OnSaveGame( ISaveGame* pSaveGame )
@@ -252,45 +180,4 @@ namespace AwesomiumPlugin
     void CAwesomiumSystem::OnPreRender()
     {
     }
-
-    void CAwesomiumSystem::UpdateHUD()
-    {
-        static Vec3 lastPosition = Vec3Constants<Vec3::value_type>::fVec3_Zero;
-        static float lastRotation = 0;
-
-        CAwesomiumView* pHUDView = m_hudView;
-
-        if ( pHUDView )
-        {
-            CCamera& camera = gEnv->pSystem->GetViewCamera();
-            Vec3 viewDir = camera.GetViewdir();
-            float rotation = cry_atan2f( viewDir.y, viewDir.x ) * 180.0f / 3.14159f;
-            // Adjust rotation so it is the same as in the game
-            rotation = -rotation - 135.0f;
-            Awesomium::WebView* pView = pHUDView->GetView();
-
-            if ( pView )
-            {
-                if ( rotation != lastRotation )
-                {
-                    //Translate this to javascript events
-                    //pView->TriggerEvent( "SetAbsoluteCompassRotation", rotation );
-                    //pView->TriggerEvent( "SetPlayerRotationOnMap", rotation - 45.0f );
-
-                    lastRotation = rotation;
-                }
-
-                Vec3 cameraPosition = camera.GetPosition();
-
-                if ( ( cameraPosition - lastPosition ).GetLengthSquared() > VEC_EPSILON )
-                {
-                    //Translate to javascript event
-                    //pView->TriggerEvent( "SetPlayerPositionOnMap", cameraPosition.x, cameraPosition.y );
-
-                    lastPosition = cameraPosition;
-                }
-            }
-        }
-    }
-
 }
