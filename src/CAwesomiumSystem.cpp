@@ -7,6 +7,7 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 
+//#undef TEST_VIEW
 bool AwesomiumPlugin::CAwesomiumSystem::g_WebCoreInit = false;
 namespace AwesomiumPlugin
 {

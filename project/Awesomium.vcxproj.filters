@@ -34,9 +34,6 @@
     <ClCompile Include="..\src\CAwesomiumSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CFullscreenTriangleDrawer.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\CAwesomiumView.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -55,9 +52,6 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CAwesomiumSystem.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CFullscreenTriangleDrawer.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CAwesomiumView.h">

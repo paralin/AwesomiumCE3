@@ -7,8 +7,6 @@
 #include <Awesomium\DataPak.h>
 #include <Awesomium\STLHelpers.h>
 
-#include "CFullscreenTriangleDrawer.h"
-
 #include "CAwesomiumView.h"
 
 //Comment if you don't want a default view to be created at start
@@ -45,7 +43,6 @@ namespace AwesomiumPlugin
             static bool g_WebCoreInit;
         private:
             std::vector<CAwesomiumView*> m_views;
-
 
             void UpdateHUD();
     };
