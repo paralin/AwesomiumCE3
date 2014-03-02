@@ -7,8 +7,6 @@
 #include <Awesomium\DataPak.h>
 #include <Awesomium\STLHelpers.h>
 
-#include "CFullscreenTriangleDrawer.h"
-
 #include "CAwesomiumView.h"
 
 //Comment if you don't want a default view to be created at start
@@ -46,10 +44,7 @@ namespace AwesomiumPlugin
             void ChangeEntityDiffuseTextureForMaterial( CAwesomiumView* pViewListener, const char* entityName, const char* materialName );
             static bool g_WebCoreInit;
         private:
-            CFullscreenTriangleDrawer* m_FullscreenDrawer;
-            CAwesomiumView* m_hudView;
             std::vector<CAwesomiumView*> m_views;
-
 
             void UpdateHUD();
     };

@@ -25,7 +25,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\CAwesomiumSystem.cpp" />
     <ClCompile Include="..\src\CAwesomiumView.cpp" />
-    <ClCompile Include="..\src\CFullscreenTriangleDrawer.cpp" />
     <ClCompile Include="..\src\CPluginAwesomium.cpp" />
     <ClCompile Include="..\src\CPluginAwesomiumModule.cpp" />
     <ClCompile Include="..\src\Flownodes\CFlowAwesomiumView.cpp" />
@@ -38,7 +37,6 @@
     <ClInclude Include="..\inc\IPluginAwesomium.h" />
     <ClInclude Include="..\src\CAwesomiumSystem.h" />
     <ClInclude Include="..\src\CAwesomiumView.h" />
-    <ClInclude Include="..\src\CFullscreenTriangleDrawer.h" />
     <ClInclude Include="..\src\CPluginAwesomium.h" />
     <ClInclude Include="..\src\StdAfx.h" />
     <ClInclude Include="resource.h" />
