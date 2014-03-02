@@ -43,6 +43,10 @@ namespace AwesomiumPlugin
 #endif
     }
 
+	CAwesomiumView * CAwesomiumSystem::CreateView(int width, int height, const char* objName, const char* matName)
+	{
+	}
+
 
     CAwesomiumSystem::~CAwesomiumSystem( void )
     {

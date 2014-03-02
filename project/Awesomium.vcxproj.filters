@@ -16,6 +16,9 @@
     <Filter Include="Flownodes">
       <UniqueIdentifier>{ed5f0fe7-0cc7-40dd-8792-86893de12ce0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Flownodes">
+      <UniqueIdentifier>{95361e60-57ca-4ad7-99bf-410a991627af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />
@@ -39,6 +42,9 @@
     </ClCompile>
     <ClCompile Include="..\src\CAwesomiumView.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Flownodes\CFlowAwesomiumView.cpp">
+      <Filter>Source Files\Flownodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

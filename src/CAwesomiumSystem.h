@@ -40,6 +40,8 @@ namespace AwesomiumPlugin
             virtual void OnActionEvent( const SActionEvent& event ) override;
             virtual void OnPreRender() override;
 
+			CAwesomiumView * CreateView(int widht, int height, const char* objName, const char* matName);
+
             void SetTexturesForListeners();
             void ChangeEntityDiffuseTextureForMaterial( CAwesomiumView* pViewListener, const char* entityName, const char* materialName );
             static bool g_WebCoreInit;

@@ -80,6 +80,7 @@ namespace AwesomiumPlugin
 
             virtual void InitAwesomium() override;
             virtual void ShutdownAwesomium() override;
+			virtual CAwesomiumSystem * GetSystem() override;
 
             bool CPluginAwesomium::InitDependencies();
             bool CPluginAwesomium::Release( bool bForce );

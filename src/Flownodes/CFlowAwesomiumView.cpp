@@ -7,13 +7,11 @@
 #include "../CAwesomiumSystem.h"
 #include "../CAwesomiumView.h"
 #include <Nodes/G2FlowBaseNode.h>
-#include <stdio.h>
-#include <sstream> //for string stuff
 
 namespace AwesomiumPlugin
 {
 class CFlowAwesomiumView :
-    public CFlowBaseNode
+    public CFlowBaseNode<eNCT_Instanced>
 {
     enum EInputPorts
     {
@@ -85,7 +83,7 @@ public:
             InputPortConfig<string>("GoTo", _HELP("Go to a URL")),
             InputPortConfig_Void("Back", _HELP("Go to the last page")),
             InputPortConfig_Void("Forward", _HELP("Go to the next page")),
-            InputPortConfig<vec3>("Resize", _HELP("Change the size of the view")),
+            InputPortConfig<Vec3>("Resize", _HELP("Change the size of the view")),
             InputPortConfig_Void("Zoom In", _HELP("Zoom in the page")),
             InputPortConfig_Void("Zoom Out", _HELP("Zoom out the page")),
             InputPortConfig<int>("SetZoom", _HELP("Set the zoom level")),
@@ -133,7 +131,7 @@ public:
 
             if ( IsPortActive( pActInfo, EIP_START ) )
             {
-                ActivateOutput<bool>( pActInfo, EOP_STARTED, StartView(GetPortString(pActInfo, EIP_MATNAME), GetPortString(pActInfo, EIP_OBJNAME) ));
+                ActivateOutput<bool>( pActInfo, EOP_STARTED, StartView(GetPortInt(pActInfo, EIP_WIDTH), GetPortInt(pActInfo, EIP_HEIGHT), GetPortString(pActInfo, EIP_MATNAME), GetPortString(pActInfo, EIP_OBJNAME)));
             }
             break;
         }
@@ -149,7 +147,6 @@ private:
       if(m_started) return true; 
       view = sys->CreateView(width, height, matName.c_str(), objName.c_str());
     }
-}
-}
+};
 
 REGISTER_FLOW_NODE_EX( "AwesomiumPlugin:View",  AwesomiumPlugin::CFlowAwesomiumView );
