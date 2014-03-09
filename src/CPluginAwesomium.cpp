@@ -33,6 +33,11 @@ namespace AwesomiumPlugin
         return true;
     }
 
+    CAwesomiumSystem* CPluginAwesomium::GetSystem()
+    {
+        return g_system;
+    }
+
     const char* CPluginAwesomium::ListCVars() const
     {
         return ""; // TODO: Enter CVARs/Commands here if you have some

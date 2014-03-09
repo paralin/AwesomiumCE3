@@ -1,7 +1,7 @@
 /* Awesomium_Plugin - for licensing and copyright see license.txt */
 
 #include <IPluginBase.h>
-
+#include "CAwesomiumSystem.h"
 #pragma once
 
 /**
@@ -21,5 +21,6 @@ namespace AwesomiumPlugin
 
         virtual void InitAwesomium() = 0;
         virtual void ShutdownAwesomium() = 0;
+        virtual CAwesomiumSystem* GetSystem() = 0;
     };
 };
