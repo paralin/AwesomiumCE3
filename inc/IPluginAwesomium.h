@@ -21,6 +21,6 @@ namespace AwesomiumPlugin
 
         virtual void InitAwesomium() = 0;
         virtual void ShutdownAwesomium() = 0;
-		virtual CAwesomiumSystem * GetSystem() = 0;
+        virtual CAwesomiumSystem* GetSystem() = 0;
     };
 };

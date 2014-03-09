@@ -35,17 +35,27 @@ namespace AwesomiumPlugin
 
         IGameFramework* pGameFramework = gEnv->pGame->GetIGameFramework();
         pGameFramework->RegisterListener( this, "CAwesomiumSystem", eFLPriority_Default );
-
-#ifdef TEST_VIEW
-        CAwesomiumView* view = new CAwesomiumView( 1000, 1000, "TestScreen", "Materials/ReplacedSquareUI" );
-        m_views.push_back( view );
-#endif
     }
 
-	CAwesomiumView * CAwesomiumSystem::CreateView(int width, int height, const char* objName, const char* matName)
-	{
-	}
+    CAwesomiumView* CAwesomiumSystem::CreateView( int width, int height, const char* objName, const char* matName )
+    {
+        CAwesomiumView* view = new CAwesomiumView( width, height, objName, matName );
+        m_views.push_back( view );
+        return view;
+    }
 
+    void CAwesomiumSystem::DeleteView( CAwesomiumView* view )
+    {
+        for ( unsigned i = 0; i < m_views.size(); ++i )
+        {
+            if ( m_views[i] == view )
+            {
+                delete view;
+                m_views.erase( m_views.begin() + i );
+                break;
+            }
+        }
+    }
 
     CAwesomiumSystem::~CAwesomiumSystem( void )
     {
@@ -74,11 +84,6 @@ namespace AwesomiumPlugin
 
     void CAwesomiumSystem::OnPrePresent()
     {
-
-        if ( g_WebCoreInit )
-        {
-            WebCore::instance()->Update();
-        }
     }
 
     void CAwesomiumSystem::OnPreReset()
@@ -184,5 +189,9 @@ namespace AwesomiumPlugin
 
     void CAwesomiumSystem::OnPreRender()
     {
+        if ( g_WebCoreInit )
+        {
+            WebCore::instance()->Update();
+        }
     }
 }

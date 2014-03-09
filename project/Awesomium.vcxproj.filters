@@ -16,9 +16,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source Files\Flownodes">
-      <UniqueIdentifier>{95361e60-57ca-4ad7-99bf-410a991627af}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />
@@ -41,7 +38,7 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Flownodes\CFlowAwesomiumView.cpp">
-      <Filter>Source Files\Flownodes</Filter>
+      <Filter>Flownodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

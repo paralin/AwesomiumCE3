@@ -24,15 +24,14 @@ namespace AwesomiumPlugin
 
         //Debug
         m_pView->Focus();
-
-#ifdef TEST_VIEW
-        m_pView->LoadURL( WebURL( WSLit( "https://www.crydev.net/" ) ) );
-#endif
+        gPlugin->LogAlways( "New view spawned, matName: %s", matName );
     }
 
     CAwesomiumView::~CAwesomiumView( void )
     {
         ReleaseTexture();
+
+        gPlugin->LogAlways( "View deleted, matName: %s", this->GetOverriddenMaterialName() );
 
         if ( m_pView )
         {

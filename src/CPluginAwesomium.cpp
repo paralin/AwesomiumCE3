@@ -33,10 +33,10 @@ namespace AwesomiumPlugin
         return true;
     }
 
-	CAwesomiumSystem *CPluginAwesomium::GetSystem()
-	{
-		return g_system;
-	}
+    CAwesomiumSystem* CPluginAwesomium::GetSystem()
+    {
+        return g_system;
+    }
 
     const char* CPluginAwesomium::ListCVars() const
     {
