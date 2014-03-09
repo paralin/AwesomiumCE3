@@ -20,8 +20,6 @@ Coming Soon
 ===========
   - Keyboard and Mouse interaction with the views
   - LUA support
-  - C++ interface
-  - FlowNodes
   - Console Variables
   - Disable / Enable Inspector
 
@@ -34,6 +32,29 @@ Install Guide / Wiki
 CVars
 =====
 Coming soon.
+
+C++ Interface
+=====
+You will need to include the Awesomium headers, found at the plugin root and `\awesomium\include`.
+
+Finally, you can use this example code:
+
+```
+AwesomiumPlugin::IAwesomiumPlugin plugin = PluginManager::safeGetPluginConcreteInterface<IPluginAwesomium*>( "Awesomium" );
+AwesomiumPlugin::CAwesomiumSystem sys = plugin->GetSystem();
+
+//Make a view
+AwesomiumPlugin::CAwesomiumView* view = sys->CreateView( width, height, "Entity Name", "Full Material Path" );
+
+//Go to YouTube
+view->GetView()->LoadURL( WebURL( WSLit( "http://youtube.com/" ) ) );
+
+//Refresh
+view->GetView()->Reload(false);
+```
+
+The `view` is an Awesomium view, so you have every method [available in their documentation](http://princeofcode.com/software/awesomium/docs/class_awesomium_1_1_web_view.html).
+
 
 Flownodes
 =========
