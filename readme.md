@@ -1,5 +1,3 @@
-Awesomium Plugin for CryEngine SDK
-=====================================
 ![Demo Image](http://img703.imageshack.us/img703/310/rctx.png)
 
 This plugin allows you to render any HTML website or local HTML file structure to any surface / material in the engine. It also includes a full screen triangle renderer for rendering to screenspace, as opposed to world space.
@@ -39,5 +37,6 @@ Coming soon.
 
 Flownodes
 =========
-Coming soon.
+There is a single flow node for creating, controlling, and otherwise manipulating a view in CryEngine.
 
+![Sample FlowGraph](http://img842.imageshack.us/img842/7114/tf60.png)
