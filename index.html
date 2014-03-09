@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Awesomiumce3 by kidovate</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/kidovate/AwesomiumCE3">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Awesomiumce3</h1>
+            <h2>A HTML UI renderer for CryEngine 3.</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/kidovate/AwesomiumCE3/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/kidovate/AwesomiumCE3/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <p><img src="http://img703.imageshack.us/img703/310/rctx.png" alt="Demo Image"></p>
+
+<p>This plugin allows you to render any HTML website or local HTML file structure to any surface / material in the engine. It also includes a full screen triangle renderer for rendering to screenspace, as opposed to world space.</p>
+
+<p>It is based on the <a href="http://awesomium.com">Awesomium</a> library which performs the heavy lifting for rendering the page. This plugin uses DirectX11 to render the image buffer to the screen, or to a CryEngine material. The engine can then use the material to render the page on to any object.</p>
+
+<p>Rendering is done in realtime, and thus supports YouTube videos, and even online browser-based games. Yes, you could play a webGL game in your CryEngine game, on a wall.</p>
+
+<p>This plugin has been completely rewritten since the original plugin was released by darman96.</p>
+
+<h1>
+<a name="inspector" class="anchor" href="#inspector"><span class="octicon octicon-link"></span></a>Inspector</h1>
+
+<p>You can access the inspector locally by navigating to <a href="http://localhost:3000">http://localhost:3000/</a>.</p>
+
+<p>On default this is on all the time, however, a planned feature is to only enable this while in the game, and use a CVar to update the port / disable the inspector.</p>
+
+<p>Note that the inspector only updates when the engine is rendering... So if you tab out of the engine, it will, on default, pause the rendering and the Inspector will not update until you tab back in again.</p>
+
+<h1>
+<a name="coming-soon" class="anchor" href="#coming-soon"><span class="octicon octicon-link"></span></a>Coming Soon</h1>
+
+<ul>
+<li>Keyboard and Mouse interaction with the views</li>
+<li>LUA support</li>
+<li>Console Variables</li>
+<li>Disable / Enable Inspector</li>
+</ul><h1>
+<a name="install-guide--wiki" class="anchor" href="#install-guide--wiki"><span class="octicon octicon-link"></span></a>Install Guide / Wiki</h1>
+
+<p><a href="https://github.com/kidovate/AwesomiumCE3/wiki">Wiki Index</a></p>
+
+<p><a href="https://github.com/kidovate/AwesomiumCE3/wiki/Install-Guide">Install Guide</a></p>
+
+<h1>
+<a name="cvars" class="anchor" href="#cvars"><span class="octicon octicon-link"></span></a>CVars</h1>
+
+<p>Coming soon.</p>
+
+<h1>
+<a name="c-interface" class="anchor" href="#c-interface"><span class="octicon octicon-link"></span></a>C++ Interface</h1>
+
+<p>You will need to include the Awesomium headers, found at the plugin root and <code>\awesomium\include</code>.</p>
+
+<p>Finally, you can use this example code:</p>
+
+<pre><code>AwesomiumPlugin::IAwesomiumPlugin plugin = PluginManager::safeGetPluginConcreteInterface&lt;IPluginAwesomium*&gt;( "Awesomium" );
+AwesomiumPlugin::CAwesomiumSystem sys = plugin-&gt;GetSystem();
+
+//Make a view
+AwesomiumPlugin::CAwesomiumView* view = sys-&gt;CreateView( width, height, "Entity Name", "Full Material Path" );
+
+//Go to YouTube
+view-&gt;GetView()-&gt;LoadURL( WebURL( WSLit( "http://youtube.com/" ) ) );
+
+//Refresh
+view-&gt;GetView()-&gt;Reload(false);
+</code></pre>
+
+<p>The <code>view</code> is an Awesomium view, so you have every method <a href="http://princeofcode.com/software/awesomium/docs/class_awesomium_1_1_web_view.html">available in their documentation</a>.</p>
+
+<h1>
+<a name="flownodes" class="anchor" href="#flownodes"><span class="octicon octicon-link"></span></a>Flownodes</h1>
+
+<p>There is a single flow node for creating, controlling, and otherwise manipulating a view in CryEngine.</p>
+
+<p><img src="http://img842.imageshack.us/img842/7114/tf60.png" alt="Sample FlowGraph"></p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/kidovate">kidovate</a> can be found on <a href="https://github.com/kidovate/AwesomiumCE3">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
